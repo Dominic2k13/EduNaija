@@ -17,7 +17,13 @@ export default function HomePage() {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 relative">
-              <Image src="/highscore-logo.svg" alt="HighScore Logo" width={48} height={48} className="object-contain" />
+              <Image
+                src="/highscore-logo-final.png"
+                alt="HighScore Logo"
+                width={48}
+                height={48}
+                className="object-contain rounded-lg"
+              />
             </div>
             <span className="text-2xl font-bold text-blue-900">HighScore</span>
           </div>
@@ -295,13 +301,13 @@ export default function HomePage() {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 relative">
+                <div className="w-12 h-12 relative">
                   <Image
-                    src="/highscore-logo.svg"
+                    src="/highscore-logo-final.png"
                     alt="HighScore Logo"
-                    width={40}
-                    height={40}
-                    className="object-contain"
+                    width={48}
+                    height={48}
+                    className="object-contain rounded-lg"
                   />
                 </div>
                 <span className="text-xl font-bold">HighScore</span>
