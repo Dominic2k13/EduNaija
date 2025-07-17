@@ -1,10 +1,15 @@
+"use client"
+
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { BookOpen, Brain, GamepadIcon, Play, Trophy, Users } from "lucide-react"
+import { BookOpen, Brain, GamepadIcon, Play, Trophy, Users, Menu, X } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 
 export default function HomePage() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       {/* Header */}
@@ -14,8 +19,10 @@ export default function HomePage() {
             <div className="w-12 h-12 relative">
               <Image src="/highscore-logo.svg" alt="HighScore Logo" width={48} height={48} className="object-contain" />
             </div>
-            <span className="text-2xl font-bold text-blue-900">EduNaija</span>
+            <span className="text-2xl font-bold text-blue-900">HighScore</span>
           </div>
+
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             <Link
               href="/tutorials"
@@ -59,17 +66,88 @@ export default function HomePage() {
               </Button>
             </Link>
           </nav>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-300"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
+
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <div className="md:hidden border-t border-gray-200 bg-white">
+            <nav className="container mx-auto px-4 py-4 flex flex-col space-y-4">
+              <Link
+                href="/tutorials"
+                className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium py-2 px-4 rounded-lg hover:bg-blue-50"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Tutorials
+              </Link>
+              <Link
+                href="/cbt"
+                className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium py-2 px-4 rounded-lg hover:bg-blue-50"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                CBT Practice
+              </Link>
+              <Link
+                href="/games"
+                className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium py-2 px-4 rounded-lg hover:bg-blue-50"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Games
+              </Link>
+              <Link
+                href="/leaderboard"
+                className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium py-2 px-4 rounded-lg hover:bg-blue-50"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Leaderboard
+              </Link>
+              <div className="flex flex-col space-y-2 pt-4 border-t border-gray-200">
+                <Link href="/login" onClick={() => setIsMenuOpen(false)}>
+                  <Button
+                    variant="outline"
+                    className="w-full border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white bg-transparent"
+                  >
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/signup" onClick={() => setIsMenuOpen(false)}>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Sign Up</Button>
+                </Link>
+              </div>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto text-center">
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">
+      <section className="relative py-20 px-4 min-h-[600px] flex items-center">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/study-background.jpg"
+            alt="Students studying together in library"
+            fill
+            className="object-cover"
+            priority
+          />
+          {/* Overlay for better text readability */}
+          <div className="absolute inset-0 bg-blue-900/70"></div>
+        </div>
+
+        {/* Content */}
+        <div className="container mx-auto text-center relative z-10">
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
             Master JAMB, SSCE & PTUME
-            <span className="text-blue-600 block">With Confidence</span>
+            <span className="text-orange-400 block">With Confidence</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto drop-shadow-md">
             Access comprehensive tutorial videos, practice CBT exams, and play gamified quizzes to excel in your
             Nigerian educational examinations.
           </p>
@@ -77,7 +155,7 @@ export default function HomePage() {
             <Link href="/signup">
               <Button
                 size="lg"
-                className="text-lg px-8 bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+                className="text-lg px-8 bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
               >
                 Get Started
               </Button>
@@ -86,7 +164,7 @@ export default function HomePage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="text-lg px-8 border-orange-500 text-orange-600 hover:bg-orange-500 hover:text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg bg-transparent"
+                className="text-lg px-8 border-2 border-white text-white hover:bg-white hover:text-blue-900 transition-all duration-300 transform hover:scale-105 hover:shadow-lg bg-transparent backdrop-blur-sm"
               >
                 <Play className="w-5 h-5 mr-2" />
                 Explore Subjects
@@ -226,7 +304,7 @@ export default function HomePage() {
                     className="object-contain"
                   />
                 </div>
-                <span className="text-xl font-bold">EduNaija</span>
+                <span className="text-xl font-bold">HighScore</span>
               </div>
               <p className="text-gray-400">
                 Empowering Nigerian students to excel in JAMB, SSCE, and PTUME examinations.
@@ -271,7 +349,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 EduNaija. All rights reserved.</p>
+            <p>&copy; 2024 HighScore. All rights reserved.</p>
           </div>
         </div>
       </footer>
