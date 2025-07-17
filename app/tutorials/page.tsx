@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { BookOpen, Play, Search, Star } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
+import Image from "next/image"
 
 export default function TutorialsPage() {
   const [selectedVideo, setSelectedVideo] = useState<any>(null)
@@ -62,8 +63,16 @@ export default function TutorialsPage() {
       <header className="border-b bg-white sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <BookOpen className="h-8 w-8 text-blue-600" />
-            <span className="text-2xl font-bold text-gray-900">EduNaija</span>
+            <div className="w-16 h-16 relative">
+              <Image
+                src="/highscore-logo-final.png"
+                alt="HighScore Logo"
+                width={64}
+                height={64}
+                className="object-contain rounded-lg"
+              />
+            </div>
+            <span className="text-2xl font-bold text-blue-900">HighScore</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/tutorials" className="text-blue-600 font-medium">

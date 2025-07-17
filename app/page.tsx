@@ -16,12 +16,12 @@ export default function HomePage() {
       <header className="border-b bg-white/90 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 relative">
+            <div className="w-16 h-16 relative">
               <Image
                 src="/highscore-logo-final.png"
                 alt="HighScore Logo"
-                width={48}
-                height={48}
+                width={64}
+                height={64}
                 className="object-contain rounded-lg"
               />
             </div>
@@ -185,19 +185,33 @@ export default function HomePage() {
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">Everything You Need to Succeed</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 group border-l-4 border-l-blue-600">
-              <CardHeader>
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-600 transition-all duration-300">
-                  <Play className="w-8 h-8 text-blue-600 group-hover:text-white transition-all duration-300" />
+            <Card className="text-center hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 group border-l-4 border-l-blue-600 relative overflow-hidden">
+              {/* Background Image */}
+              <div className="absolute inset-0 z-0">
+                <Image
+                  src="/video-tutorial-bg.jpg"
+                  alt="Student studying with laptop and books"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+
+              <CardHeader className="relative z-10">
+                <div className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white transition-all duration-300">
+                  <Play className="w-8 h-8 text-blue-600 transition-all duration-300" />
                 </div>
-                <CardTitle className="text-gray-900">Video Tutorials</CardTitle>
-                <CardDescription>Expert-led video lessons covering all JAMB, SSCE, and PTUME subjects</CardDescription>
+                <CardTitle className="text-gray-900 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 inline-block">
+                  Video Tutorials
+                </CardTitle>
+                <CardDescription className="text-gray-700 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 mt-2">
+                  Expert-led video lessons covering all JAMB, SSCE, and PTUME subjects
+                </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="relative z-10">
                 <Link href="/tutorials">
                   <Button
                     variant="outline"
-                    className="w-full border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-105 bg-transparent"
+                    className="w-full border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-105 bg-white/90 backdrop-blur-sm"
                   >
                     Browse Tutorials
                   </Button>
@@ -205,19 +219,33 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            <Card className="text-center hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 group border-l-4 border-l-red-600">
-              <CardHeader>
-                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-red-600 transition-all duration-300">
-                  <Brain className="w-8 h-8 text-red-600 group-hover:text-white transition-all duration-300" />
+            <Card className="text-center hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 group border-l-4 border-l-red-600 relative overflow-hidden">
+              {/* Background Image */}
+              <div className="absolute inset-0 z-0">
+                <Image
+                  src="/cbt-practice-bg.jpg"
+                  alt="Students in classroom taking computer-based test"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+
+              <CardHeader className="relative z-10">
+                <div className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white transition-all duration-300">
+                  <Brain className="w-8 h-8 text-red-600 transition-all duration-300" />
                 </div>
-                <CardTitle className="text-gray-900">CBT Practice</CardTitle>
-                <CardDescription>Realistic computer-based test simulations with instant feedback</CardDescription>
+                <CardTitle className="text-gray-900 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 inline-block">
+                  CBT Practice
+                </CardTitle>
+                <CardDescription className="text-gray-700 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 mt-2">
+                  Realistic computer-based test simulations with instant feedback
+                </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="relative z-10">
                 <Link href="/cbt">
                   <Button
                     variant="outline"
-                    className="w-full border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition-all duration-300 transform hover:scale-105 bg-transparent"
+                    className="w-full border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition-all duration-300 transform hover:scale-105 bg-white/90 backdrop-blur-sm"
                   >
                     Start Practice
                   </Button>
@@ -225,19 +253,33 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            <Card className="text-center hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 group border-l-4 border-l-orange-500">
-              <CardHeader>
-                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-500 transition-all duration-300">
-                  <GamepadIcon className="w-8 h-8 text-orange-500 group-hover:text-white transition-all duration-300" />
+            <Card className="text-center hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 group border-l-4 border-l-orange-500 relative overflow-hidden">
+              {/* Background Image */}
+              <div className="absolute inset-0 z-0">
+                <Image
+                  src="/quiz-games-bg.jpg"
+                  alt="Colorful quiz game icons with question mark, checkmark, and exclamation"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+
+              <CardHeader className="relative z-10">
+                <div className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white transition-all duration-300">
+                  <GamepadIcon className="w-8 h-8 text-orange-500 transition-all duration-300" />
                 </div>
-                <CardTitle className="text-gray-900">Quiz Games</CardTitle>
-                <CardDescription>Gamified learning experience with leaderboards and achievements</CardDescription>
+                <CardTitle className="text-gray-900 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 inline-block">
+                  Quiz Games
+                </CardTitle>
+                <CardDescription className="text-gray-700 bg-white/90 backdrop-blur-sm rounded-lg px-4 py-2 mt-2">
+                  Gamified learning experience with leaderboards and achievements
+                </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="relative z-10">
                 <Link href="/games">
                   <Button
                     variant="outline"
-                    className="w-full border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-300 transform hover:scale-105 bg-transparent"
+                    className="w-full border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-300 transform hover:scale-105 bg-white/90 backdrop-blur-sm"
                   >
                     Play Games
                   </Button>
@@ -301,12 +343,12 @@ export default function HomePage() {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 relative">
+                <div className="w-16 h-16 relative">
                   <Image
                     src="/highscore-logo-final.png"
                     alt="HighScore Logo"
-                    width={48}
-                    height={48}
+                    width={64}
+                    height={64}
                     className="object-contain rounded-lg"
                   />
                 </div>

@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Trophy, TrendingUp, Users, Target, Calendar } from "lucide-react"
 import Link from "next/link"
 import Leaderboard from "@/components/leaderboard"
+import Image from "next/image"
 
 export default function LeaderboardPage() {
   return (
@@ -13,10 +14,16 @@ export default function LeaderboardPage() {
       <header className="border-b bg-white/90 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">EN</span>
+            <div className="w-16 h-16 relative">
+              <Image
+                src="/highscore-logo-final.png"
+                alt="HighScore Logo"
+                width={64}
+                height={64}
+                className="object-contain rounded-lg"
+              />
             </div>
-            <span className="text-2xl font-bold text-blue-900">EduNaija</span>
+            <span className="text-2xl font-bold text-blue-900">HighScore</span>
           </Link>
           <nav className="hidden md:flex items-center gap-8">
             <Link
