@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { BookOpen, Brain, GamepadIcon, Play, Trophy, Users } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function HomePage() {
   return (
@@ -10,8 +11,8 @@ export default function HomePage() {
       <header className="border-b bg-white/90 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">EN</span>
+            <div className="w-12 h-12 relative">
+              <Image src="/highscore-logo.svg" alt="HighScore Logo" width={48} height={48} className="object-contain" />
             </div>
             <span className="text-2xl font-bold text-blue-900">EduNaija</span>
           </div>
@@ -216,8 +217,14 @@ export default function HomePage() {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">EN</span>
+                <div className="w-10 h-10 relative">
+                  <Image
+                    src="/highscore-logo.svg"
+                    alt="HighScore Logo"
+                    width={40}
+                    height={40}
+                    className="object-contain"
+                  />
                 </div>
                 <span className="text-xl font-bold">EduNaija</span>
               </div>
