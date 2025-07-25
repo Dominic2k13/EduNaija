@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { BookOpen, Clock, FileText, ArrowRight, ArrowLeft, Flag } from "lucide-react"
+import { Clock, FileText, ArrowRight, ArrowLeft, Flag } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 interface CBTQuestion {
   id: number
@@ -376,9 +377,17 @@ export default function JAMBCBTTest() {
       <div className="min-h-screen bg-gray-50">
         <header className="border-b bg-white sticky top-0 z-50">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <BookOpen className="h-8 w-8 text-blue-600" />
-              <span className="text-2xl font-bold text-gray-900">EduNaija</span>
+            <Link href="/" className="flex items-center gap-3">
+              <div className="w-16 h-16 relative">
+                <Image
+                  src="/highscore-logo-final.png"
+                  alt="HighScore Logo"
+                  width={64}
+                  height={64}
+                  className="object-contain rounded-lg"
+                />
+              </div>
+              <span className="text-2xl font-bold text-blue-900">HighScore</span>
             </Link>
             <Link href="/cbt">
               <Button variant="outline">Back to CBT</Button>
@@ -471,9 +480,17 @@ export default function JAMBCBTTest() {
       <div className="min-h-screen bg-gray-50">
         <header className="border-b bg-white sticky top-0 z-50">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <BookOpen className="h-8 w-8 text-blue-600" />
-              <span className="text-2xl font-bold text-gray-900">EduNaija</span>
+            <Link href="/" className="flex items-center gap-3">
+              <div className="w-16 h-16 relative">
+                <Image
+                  src="/highscore-logo-final.png"
+                  alt="HighScore Logo"
+                  width={64}
+                  height={64}
+                  className="object-contain rounded-lg"
+                />
+              </div>
+              <span className="text-2xl font-bold text-blue-900">HighScore</span>
             </Link>
             <Link href="/cbt">
               <Button variant="outline">Back to CBT</Button>
@@ -563,9 +580,17 @@ export default function JAMBCBTTest() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link href="/" className="flex items-center gap-2">
-                <BookOpen className="h-6 w-6 text-blue-600" />
-                <span className="text-xl font-bold text-gray-900">EduNaija</span>
+              <Link href="/" className="flex items-center gap-3">
+                <div className="w-16 h-16 relative">
+                  <Image
+                    src="/highscore-logo-final.png"
+                    alt="HighScore Logo"
+                    width={64}
+                    height={64}
+                    className="object-contain rounded-lg"
+                  />
+                </div>
+                <span className="text-2xl font-bold text-blue-900">HighScore</span>
               </Link>
               <Badge variant="outline">JAMB UTME Practice</Badge>
             </div>
