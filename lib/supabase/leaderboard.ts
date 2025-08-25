@@ -9,46 +9,31 @@ export interface LeaderboardEntry {
   total_matches: number
   win_rate: number
   best_subject: string
-  created_at: string
+  position: number
 }
 
 export async function getLeaderboard(limit = 50): Promise<LeaderboardEntry[]> {
   try {
-    const { data, error } = await supabase.from("users").select("*").order("xp", { ascending: false }).limit(limit)
+    const { data, error } = await supabase.from("leaderboard").select("*").limit(limit)
 
     if (error) throw error
 
     return data || []
   } catch (error) {
-    console.error("Error fetching leaderboard:", error)
+    console.error("Get leaderboard error:", error)
     throw error
-  }
-}
-
-export async function getUserRanking(userId: string): Promise<number> {
-  try {
-    const { data, error } = await supabase.from("users").select("id, xp").order("xp", { ascending: false })
-
-    if (error) throw error
-
-    const userIndex = data?.findIndex((user) => user.id === userId)
-    return userIndex !== undefined && userIndex !== -1 ? userIndex + 1 : 0
-  } catch (error) {
-    console.error("Error getting user ranking:", error)
-    return 0
   }
 }
 
 export async function getUserRank(userId: string): Promise<number | null> {
   try {
-    const { data, error } = await supabase.from("users").select("id, xp").order("xp", { ascending: false })
+    const { data, error } = await supabase.from("leaderboard").select("position").eq("id", userId).single()
 
     if (error) throw error
 
-    const userIndex = data?.findIndex((user) => user.id === userId)
-    return userIndex !== undefined && userIndex !== -1 ? userIndex + 1 : null
+    return data?.position || null
   } catch (error) {
-    console.error("Error getting user rank:", error)
+    console.error("Get user rank error:", error)
     return null
   }
 }

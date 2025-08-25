@@ -5,25 +5,10 @@ export interface Achievement {
   title: string
   description: string
   icon: string
-  requirement_type: string
-  requirement_value: number
-  xp_reward: number
-  coin_reward: number
-  created_at: string
+  category: string
+  points: number
   earned_at?: string
-}
-
-export async function getAllAchievements(): Promise<Achievement[]> {
-  try {
-    const { data, error } = await supabase.from("achievements").select("*").order("created_at", { ascending: true })
-
-    if (error) throw error
-
-    return data || []
-  } catch (error) {
-    console.error("Error fetching all achievements:", error)
-    return []
-  }
+  created_at: string
 }
 
 export async function getUserAchievements(userId: string): Promise<Achievement[]> {
@@ -32,7 +17,7 @@ export async function getUserAchievements(userId: string): Promise<Achievement[]
       .from("achievements")
       .select(`
         *,
-        user_achievements!left(earned_at)
+        user_achievements!inner(earned_at)
       `)
       .eq("user_achievements.user_id", userId)
 
@@ -41,80 +26,25 @@ export async function getUserAchievements(userId: string): Promise<Achievement[]
     return (
       data?.map((achievement) => ({
         ...achievement,
-        earned_at: achievement.user_achievements?.[0]?.earned_at || null,
+        earned_at: achievement.user_achievements[0]?.earned_at,
       })) || []
     )
   } catch (error) {
-    console.error("Error fetching user achievements:", error)
-    return []
+    console.error("Get user achievements error:", error)
+    throw error
   }
 }
 
-export async function checkAndAwardAchievements(
-  userId: string,
-  stats: {
-    total_matches?: number
-    win_rate?: number
-    xp?: number
-    coins?: number
-  },
-) {
+export async function getAllAchievements(): Promise<Achievement[]> {
   try {
-    // Get all achievements
-    const { data: achievements, error: achievementsError } = await supabase.from("achievements").select("*")
+    const { data, error } = await supabase.from("achievements").select("*").order("category", { ascending: true })
 
-    if (achievementsError) throw achievementsError
+    if (error) throw error
 
-    // Get user's current achievements
-    const { data: userAchievements, error: userAchievementsError } = await supabase
-      .from("user_achievements")
-      .select("achievement_id")
-      .eq("user_id", userId)
-
-    if (userAchievementsError) throw userAchievementsError
-
-    const earnedAchievementIds = new Set(userAchievements?.map((ua) => ua.achievement_id) || [])
-
-    // Check each achievement
-    for (const achievement of achievements || []) {
-      if (earnedAchievementIds.has(achievement.id)) continue
-
-      let shouldAward = false
-
-      switch (achievement.requirement_type) {
-        case "matches_played":
-          shouldAward = (stats.total_matches || 0) >= achievement.requirement_value
-          break
-        case "win_rate":
-          shouldAward = (stats.win_rate || 0) >= achievement.requirement_value
-          break
-        case "xp_earned":
-          shouldAward = (stats.xp || 0) >= achievement.requirement_value
-          break
-        case "coins_earned":
-          shouldAward = (stats.coins || 0) >= achievement.requirement_value
-          break
-      }
-
-      if (shouldAward) {
-        // Award the achievement
-        await supabase.from("user_achievements").insert({
-          user_id: userId,
-          achievement_id: achievement.id,
-        })
-
-        // Update user stats with rewards
-        await supabase
-          .from("users")
-          .update({
-            xp: (stats.xp || 0) + achievement.xp_reward,
-            coins: (stats.coins || 0) + achievement.coin_reward,
-          })
-          .eq("id", userId)
-      }
-    }
+    return data || []
   } catch (error) {
-    console.error("Error checking achievements:", error)
+    console.error("Get all achievements error:", error)
+    throw error
   }
 }
 

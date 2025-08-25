@@ -9,26 +9,42 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { User, Mail } from "lucide-react"
-import Link from "next/link"
+import { signUpWithEmail } from "@/lib/supabase/auth"
+import { toast } from "sonner"
+import { Eye, EyeOff } from "lucide-react"
 
 export default function RegisterPage() {
-  const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!username.trim()) return
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match")
+      return
+    }
+
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters")
+      return
+    }
 
     setLoading(true)
-
-    // Simulate registration process
-    setTimeout(() => {
-      // For now, just redirect to games page
-      router.push("/games")
-    }, 1000)
+    try {
+      await signUpWithEmail(email, password)
+      toast.success("Account created successfully! Please check your email to verify your account.")
+      router.push("/auth/login")
+    } catch (error: any) {
+      toast.error(error.message || "Failed to create account")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -48,46 +64,81 @@ export default function RegisterPage() {
             <span className="text-2xl font-bold text-blue-900">HighScore</span>
           </div>
           <CardTitle className="text-2xl">Create Your Account</CardTitle>
-          <CardDescription>Register to access the learning platform</CardDescription>
+          <CardDescription>Sign up to access the learning platform</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleRegister} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="username" className="text-base font-medium">
-                Username *
+              <Label htmlFor="email" className="text-base font-medium">
+                Email Address
               </Label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <Input
-                  id="username"
-                  type="text"
-                  placeholder="Enter your preferred username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                  className="h-12 text-base pl-10"
-                  maxLength={20}
-                  disabled={loading}
-                />
-              </div>
-              <p className="text-sm text-gray-600">This will be displayed on the Hall of Fame and achievements</p>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter your email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="h-12 text-base"
+                disabled={loading}
+              />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-base font-medium">
-                Email (Optional)
+              <Label htmlFor="password" className="text-base font-medium">
+                Password
               </Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 text-base pl-10"
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Create a secure password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="h-12 text-base pr-10"
                   disabled={loading}
+                  minLength={6}
                 />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-0 h-12 w-12"
+                  onClick={() => setShowPassword(!showPassword)}
+                  disabled={loading}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword" className="text-base font-medium">
+                Confirm Password
+              </Label>
+              <div className="relative">
+                <Input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  className="h-12 text-base pr-10"
+                  disabled={loading}
+                  minLength={6}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-0 h-12 w-12"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  disabled={loading}
+                >
+                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </Button>
               </div>
             </div>
 
@@ -100,13 +151,15 @@ export default function RegisterPage() {
             </Button>
           </form>
 
-          <div className="text-center mt-6">
-            <p className="text-gray-600">
-              Already have an account?{" "}
-              <Link href="/auth/login" className="text-blue-600 hover:text-blue-700 font-medium">
-                Sign in
-              </Link>
-            </p>
+          <div className="text-center mt-4">
+            <Button
+              variant="link"
+              onClick={() => router.push("/auth/login")}
+              className="text-blue-600 hover:text-blue-700"
+              disabled={loading}
+            >
+              Already have an account? Sign in
+            </Button>
           </div>
         </CardContent>
       </Card>

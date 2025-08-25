@@ -58,7 +58,7 @@ export default function HomePage() {
               Leaderboard
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="/auth/login">
+            <Link href="/login">
               <Button
                 variant="outline"
                 className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-105 bg-transparent"
@@ -66,7 +66,7 @@ export default function HomePage() {
                 Login
               </Button>
             </Link>
-            <Link href="/auth/register">
+            <Link href="/signup">
               <Button className="bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
                 Sign Up
               </Button>
@@ -115,7 +115,7 @@ export default function HomePage() {
                 Leaderboard
               </Link>
               <div className="flex flex-col space-y-2 pt-4 border-t border-gray-200">
-                <Link href="/auth/login" onClick={() => setIsMenuOpen(false)}>
+                <Link href="/login" onClick={() => setIsMenuOpen(false)}>
                   <Button
                     variant="outline"
                     className="w-full border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white bg-transparent"
@@ -123,7 +123,7 @@ export default function HomePage() {
                     Login
                   </Button>
                 </Link>
-                <Link href="/auth/register" onClick={() => setIsMenuOpen(false)}>
+                <Link href="/signup" onClick={() => setIsMenuOpen(false)}>
                   <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Sign Up</Button>
                 </Link>
               </div>
@@ -158,7 +158,7 @@ export default function HomePage() {
             Nigerian educational examinations.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/auth/register">
+            <Link href="/signup">
               <Button
                 size="lg"
                 className="text-lg px-8 bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
@@ -284,7 +284,7 @@ export default function HomePage() {
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Join thousands of students who have improved their scores with our comprehensive learning platform.
           </p>
-          <Link href="/auth/register">
+          <Link href="/signup">
             <Button
               size="lg"
               className="text-lg px-8 bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"

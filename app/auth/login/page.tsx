@@ -9,25 +9,35 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { User } from "lucide-react"
-import Link from "next/link"
+import { signInWithEmail } from "@/lib/supabase/auth"
+import { toast } from "sonner"
+import { Eye, EyeOff } from "lucide-react"
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!username.trim()) return
 
     setLoading(true)
+    try {
+      const { user } = await signInWithEmail(email, password)
 
-    // Simulate login process
-    setTimeout(() => {
-      // For now, just redirect to games page
-      router.push("/games")
-    }, 1000)
+      // Check if user has completed their profile
+      if (!user.profile_completed) {
+        router.push("/auth/setup-profile")
+      } else {
+        router.push("/games")
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Failed to sign in")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -47,26 +57,51 @@ export default function LoginPage() {
             <span className="text-2xl font-bold text-blue-900">HighScore</span>
           </div>
           <CardTitle className="text-2xl">Welcome Back</CardTitle>
-          <CardDescription>Sign in to access your learning dashboard</CardDescription>
+          <CardDescription>Sign in to your learning platform</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="username" className="text-base font-medium">
-                Username
+              <Label htmlFor="email" className="text-base font-medium">
+                Email Address
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter your email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="h-12 text-base"
+                disabled={loading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-base font-medium">
+                Password
               </Label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
-                  id="username"
-                  type="text"
-                  placeholder="Enter your username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="h-12 text-base pl-10"
+                  className="h-12 text-base pr-10"
                   disabled={loading}
                 />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-0 h-12 w-12"
+                  onClick={() => setShowPassword(!showPassword)}
+                  disabled={loading}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </Button>
               </div>
             </div>
 
@@ -79,13 +114,15 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div className="text-center mt-6">
-            <p className="text-gray-600">
-              New to HighScore?{" "}
-              <Link href="/auth/register" className="text-blue-600 hover:text-blue-700 font-medium">
-                Create account
-              </Link>
-            </p>
+          <div className="text-center mt-4 space-y-2">
+            <Button
+              variant="link"
+              onClick={() => router.push("/auth/register")}
+              className="text-blue-600 hover:text-blue-700"
+              disabled={loading}
+            >
+              Don't have an account? Sign up
+            </Button>
           </div>
         </CardContent>
       </Card>
