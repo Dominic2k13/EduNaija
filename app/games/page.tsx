@@ -1,298 +1,304 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Crown, GamepadIcon, Star, Trophy, Zap } from "lucide-react"
+import {
+  Crown,
+  GamepadIcon,
+  Star,
+  Trophy,
+  Zap,
+  Users,
+  Gift,
+  Play,
+  Target,
+  Award,
+  Shield,
+  Settings,
+  BookOpen,
+  LogOut,
+} from "lucide-react"
 import Link from "next/link"
-import Leaderboard from "@/components/leaderboard"
-import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { getCurrentUser, signOut, type UserProfile } from "@/lib/supabase/auth"
+import { getUserAchievements, type Achievement } from "@/lib/supabase/achievements"
+import { toast } from "sonner"
 
 export default function GamesPage() {
-  const [selectedGame, setSelectedGame] = useState<string | null>(null)
+  const [userData, setUserData] = useState<UserProfile | null>(null)
+  const [achievements, setAchievements] = useState<Achievement[]>([])
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
-  const games = [
-    {
-      id: "quiz-master",
-      title: "Quiz Master",
-      description: "Answer questions quickly to earn points and climb the leaderboard",
-      difficulty: "Easy",
-      players: "1,234",
-      category: "General Knowledge",
-      icon: <Zap className="w-8 h-8 text-orange-500" />,
-      color: "border-orange-500",
-      bgColor: "bg-orange-50",
-      hoverColor: "hover:bg-orange-100",
-    },
-    {
-      id: "math-champion",
-      title: "Math Champion",
-      description: "Solve mathematical problems in time-based challenges",
-      difficulty: "Medium",
-      players: "856",
-      category: "Mathematics",
-      icon: <Trophy className="w-8 h-8 text-blue-600" />,
-      color: "border-blue-600",
-      bgColor: "bg-blue-50",
-      hoverColor: "hover:bg-blue-100",
-    },
-    {
-      id: "science-explorer",
-      title: "Science Explorer",
-      description: "Explore physics and chemistry through interactive quizzes",
-      difficulty: "Hard",
-      players: "642",
-      category: "Science",
-      icon: <Star className="w-8 h-8 text-red-600" />,
-      color: "border-red-600",
-      bgColor: "bg-red-50",
-      hoverColor: "hover:bg-red-100",
-    },
-    {
-      id: "word-wizard",
-      title: "Word Wizard",
-      description: "Master English language through vocabulary and grammar games",
-      difficulty: "Medium",
-      players: "1,089",
-      category: "English",
-      icon: <Crown className="w-8 h-8 text-green-600" />,
-      color: "border-green-600",
-      bgColor: "bg-green-50",
-      hoverColor: "hover:bg-green-100",
-    },
-  ]
+  useEffect(() => {
+    loadUserData()
+  }, [])
 
-  const achievements = [
-    { title: "First Victory", description: "Win your first game", unlocked: true },
-    { title: "Speed Demon", description: "Answer 10 questions in under 30 seconds", unlocked: true },
-    { title: "Math Genius", description: "Score 100% in a Math game", unlocked: false },
-    { title: "Streak Master", description: "Maintain a 7-day playing streak", unlocked: false },
-  ]
+  const loadUserData = async () => {
+    try {
+      const user = await getCurrentUser()
+      if (!user) {
+        router.push("/auth/login")
+        return
+      }
+
+      // Check if profile is completed
+      if (!user.profile_completed) {
+        router.push("/auth/setup-profile")
+        return
+      }
+
+      setUserData(user)
+
+      // Load user achievements
+      try {
+        const userAchievements = await getUserAchievements(user.id)
+        setAchievements(userAchievements)
+      } catch (error) {
+        console.error("Error loading achievements:", error)
+        // Continue without achievements if there's an error
+      }
+    } catch (error) {
+      console.error("Error loading user data:", error)
+      toast.error("Failed to load user data")
+      router.push("/auth/login")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await signOut()
+      router.push("/auth/login")
+    } catch (error) {
+      console.error("Logout error:", error)
+      toast.error("Failed to sign out")
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading your dashboard...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!userData) {
+    return null
+  }
+
+  const recentAchievements = achievements.slice(0, 4).map((achievement) => ({
+    title: achievement.title,
+    description: achievement.description,
+    icon:
+      achievement.icon === "trophy" ? (
+        <Trophy className="w-6 h-6 text-orange-500" />
+      ) : achievement.icon === "zap" ? (
+        <Zap className="w-6 h-6 text-blue-500" />
+      ) : achievement.icon === "star" ? (
+        <Star className="w-6 h-6 text-yellow-500" />
+      ) : (
+        <Shield className="w-6 h-6 text-green-500" />
+      ),
+    earned: !!achievement.earned_at,
+    date: achievement.earned_at ? new Date(achievement.earned_at).toLocaleDateString() : "Locked",
+  }))
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      {/* Header */}
-      <header className="border-b bg-white/90 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-16 h-16 relative">
-              <Image
-                src="/highscore-logo-final.png"
-                alt="HighScore Logo"
-                width={64}
-                height={64}
-                className="object-contain rounded-lg"
-              />
-            </div>
-            <span className="text-2xl font-bold text-blue-900">HighScore</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-8">
-            <Link
-              href="/tutorials"
-              className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium relative group"
-            >
-              Tutorials
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-            </Link>
-            <Link
-              href="/cbt"
-              className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium relative group"
-            >
-              CBT Practice
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-            </Link>
-            <Link href="/games" className="text-blue-600 font-medium relative">
-              Games
-              <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-blue-600"></span>
-            </Link>
-            <Link href="/login">
-              <Button
-                variant="outline"
-                className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-105 bg-transparent"
-              >
-                Login
-              </Button>
-            </Link>
-          </nav>
-        </div>
-      </header>
-
-      <div className="container mx-auto px-4 py-8">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Learning Games</h1>
-          <p className="text-gray-600 mb-6">
-            Make learning fun with our gamified quiz platform. Compete with friends and earn achievements!
-          </p>
-        </div>
-
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2">
-            {/* Games Grid */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-semibold mb-6 text-gray-900">Choose Your Game</h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                {games.map((game) => (
-                  <div key={game.id}>
-                    <Link href={`/games/${game.id}`}>
-                      <Card
-                        className={`border-l-4 ${game.color} ${game.bgColor} hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer group overflow-hidden relative`}
-                      >
-                        <div
-                          className={`absolute inset-0 ${game.hoverColor} opacity-0 group-hover:opacity-100 transition-all duration-300`}
-                        ></div>
-                        <CardHeader className="relative z-10">
-                          <div className="flex items-start justify-between">
-                            <div className="flex items-center gap-3">
-                              <div className="transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
-                                {game.icon}
-                              </div>
-                              <div>
-                                <CardTitle className="text-lg text-gray-900 group-hover:text-gray-800 transition-colors duration-300">
-                                  {game.title}
-                                </CardTitle>
-                                <Badge variant="outline" className="mt-1 border-gray-400 text-gray-600">
-                                  {game.category}
-                                </Badge>
-                              </div>
-                            </div>
-                            <Badge
-                              variant={
-                                game.difficulty === "Easy"
-                                  ? "secondary"
-                                  : game.difficulty === "Medium"
-                                    ? "default"
-                                    : "destructive"
-                              }
-                              className="transform transition-all duration-300 group-hover:scale-105"
-                            >
-                              {game.difficulty}
-                            </Badge>
-                          </div>
-                        </CardHeader>
-                        <CardContent className="relative z-10">
-                          <CardDescription className="mb-4 text-gray-600">{game.description}</CardDescription>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-1 text-sm text-gray-600">
-                              <GamepadIcon className="w-4 h-4" />
-                              <span>{game.players} players</span>
-                            </div>
-                            <Button
-                              size="sm"
-                              className="bg-blue-600 hover:bg-blue-700 text-white transform transition-all duration-300 group-hover:scale-105"
-                            >
-                              Play Now
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </Link>
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        {/* User Info Header Card */}
+        <Card className="mb-8 bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700 text-white border-0 shadow-2xl overflow-hidden relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-3xl"></div>
+          <CardContent className="p-8 relative z-10">
+            <div className="flex items-start justify-between mb-6">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/30">
+                  <GamepadIcon className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold mb-2">Welcome back, {userData.username}</h1>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 bg-orange-500/90 px-3 py-1 rounded-full">
+                      <Crown className="w-4 h-4 text-white" />
+                      <span className="font-semibold text-white">{userData.rank}</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-yellow-500/90 px-3 py-1 rounded-full">
+                      <Star className="w-4 h-4 text-white fill-current" />
+                      <span className="font-semibold text-white">{userData.coins}</span>
+                    </div>
                   </div>
-                ))}
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
+                  <Settings className="w-6 h-6" />
+                </Button>
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={handleLogout}>
+                  <LogOut className="w-6 h-6" />
+                </Button>
               </div>
             </div>
 
-            {/* Player Stats */}
-            <Card className="hover:shadow-lg transition-all duration-300">
-              <CardHeader>
-                <CardTitle className="text-gray-900">Your Gaming Stats</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center group cursor-pointer">
-                    <div className="transform transition-all duration-300 group-hover:scale-110">
-                      <div className="text-2xl font-bold text-blue-600">1,250</div>
-                      <div className="text-sm text-gray-600">Total Points</div>
-                    </div>
-                  </div>
-                  <div className="text-center group cursor-pointer">
-                    <div className="transform transition-all duration-300 group-hover:scale-110">
-                      <div className="text-2xl font-bold text-green-600">18</div>
-                      <div className="text-sm text-gray-600">Games Won</div>
-                    </div>
-                  </div>
-                  <div className="text-center group cursor-pointer">
-                    <div className="transform transition-all duration-300 group-hover:scale-110">
-                      <div className="text-2xl font-bold text-red-600">85%</div>
-                      <div className="text-sm text-gray-600">Accuracy</div>
-                    </div>
-                  </div>
-                  <div className="text-center group cursor-pointer">
-                    <div className="transform transition-all duration-300 group-hover:scale-110">
-                      <div className="text-2xl font-bold text-orange-500">7</div>
-                      <div className="text-sm text-gray-600">Day Streak</div>
-                    </div>
-                  </div>
-                </div>
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-white/90">Progress to next level</span>
+                <span className="text-white font-semibold">{userData.xp} XP</span>
+              </div>
+              <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
+                <div
+                  className="bg-gradient-to-r from-cyan-400 to-blue-400 h-full rounded-full transition-all duration-500"
+                  style={{ width: `${(userData.xp / 1000) * 100}%` }}
+                ></div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Action Cards Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Quick Assessment */}
+          <Link href="/games/mode-selection">
+            <Card className="bg-gradient-to-br from-teal-500 to-teal-600 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-32">
+              <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
+                <Play className="w-8 h-8 mb-3 transform transition-all duration-300 group-hover:scale-110" />
+                <h3 className="font-bold text-lg mb-1">Quick Assessment</h3>
+                <p className="text-sm opacity-90">Start practice session</p>
               </CardContent>
             </Card>
-          </div>
+          </Link>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Leaderboard */}
-            <Leaderboard showAllGames={false} />
-
-            {/* Achievements */}
-            <Card className="hover:shadow-lg transition-all duration-300">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-gray-900">
-                  <Star className="w-5 h-5 text-orange-500" />
-                  Achievements
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {achievements.map((achievement, index) => (
-                  <div
-                    key={index}
-                    className={`p-3 rounded-lg border transition-all duration-300 hover:shadow-md transform hover:scale-105 cursor-pointer ${
-                      achievement.unlocked
-                        ? "bg-green-50 border-green-200 hover:bg-green-100"
-                        : "bg-gray-50 border-gray-200 hover:bg-gray-100"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <div
-                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                          achievement.unlocked ? "bg-green-500" : "bg-gray-400"
-                        }`}
-                      />
-                      <div className="font-medium text-sm text-gray-900">{achievement.title}</div>
-                    </div>
-                    <div className="text-xs text-gray-600">{achievement.description}</div>
-                  </div>
-                ))}
+          {/* Hall of Fame */}
+          <Link href="/games/leaderboard">
+            <Card className="bg-gradient-to-br from-orange-500 to-red-500 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-32">
+              <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
+                <Trophy className="w-8 h-8 mb-3 transform transition-all duration-300 group-hover:scale-110" />
+                <h3 className="font-bold text-lg mb-1">Hall of Fame</h3>
+                <p className="text-sm opacity-90">View top performers</p>
               </CardContent>
             </Card>
+          </Link>
 
-            {/* Daily Challenge */}
-            <Card className="hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-200">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-gray-900">
-                  <Zap className="w-5 h-5 text-orange-500" />
-                  Daily Challenge
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="mb-4">
-                  <div className="font-medium mb-2 text-gray-900">Mathematics Sprint</div>
-                  <div className="text-sm text-gray-600 mb-3">Solve 20 math problems in under 5 minutes</div>
-                  <Progress value={60} className="mb-2" />
-                  <div className="text-xs text-gray-500">12/20 completed</div>
-                </div>
-                <Button
-                  className="w-full bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform hover:scale-105"
-                  size="sm"
-                >
-                  Continue Challenge
-                </Button>
+          {/* Achievements */}
+          <Link href="/games/rewards">
+            <Card className="bg-gradient-to-br from-yellow-500 to-orange-500 text-white border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group h-32">
+              <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
+                <Gift className="w-8 h-8 mb-3 transform transition-all duration-300 group-hover:scale-110" />
+                <h3 className="font-bold text-lg mb-1">Achievements</h3>
+                <p className="text-sm opacity-90">View progress</p>
               </CardContent>
             </Card>
-          </div>
+          </Link>
+
+          {/* Study Groups */}
+          <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white border-0 shadow-xl opacity-75 cursor-not-allowed h-32">
+            <CardContent className="p-6 flex flex-col items-center justify-center text-center h-full">
+              <Users className="w-8 h-8 mb-3" />
+              <h3 className="font-bold text-lg mb-1">Study Groups</h3>
+              <p className="text-sm opacity-90">Coming soon</p>
+            </CardContent>
+          </Card>
         </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {/* Total Assessments */}
+          <Card className="bg-gradient-to-br from-blue-600/10 to-blue-700/10 border border-blue-200 hover:shadow-lg transition-all duration-300">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-600 text-sm mb-1">Total Assessments</p>
+                  <p className="text-3xl font-bold text-blue-600">{userData.total_matches}</p>
+                </div>
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Target className="w-6 h-6 text-blue-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Success Rate */}
+          <Card className="bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border border-yellow-200 hover:shadow-lg transition-all duration-300">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-600 text-sm mb-1">Success Rate</p>
+                  <p className="text-3xl font-bold text-orange-500">{userData.win_rate}%</p>
+                </div>
+                <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                  <Zap className="w-6 h-6 text-yellow-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Strongest Subject */}
+          <Card className="bg-gradient-to-br from-green-500/10 to-green-600/10 border border-green-200 hover:shadow-lg transition-all duration-300">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-600 text-sm mb-1">Strongest Subject</p>
+                  <p className="text-3xl font-bold text-green-600">{userData.best_subject}</p>
+                </div>
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                  <BookOpen className="w-6 h-6 text-green-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Recent Achievements */}
+        <Card className="bg-gradient-to-br from-gray-50 to-blue-50/50 border border-gray-200 shadow-lg">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-gray-900 text-xl">
+              <Award className="w-6 h-6 text-orange-500" />
+              Recent Achievements
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {recentAchievements.length > 0 ? (
+              recentAchievements.map((achievement, index) => (
+                <div
+                  key={index}
+                  className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 hover:shadow-md transform hover:scale-[1.02] cursor-pointer ${
+                    achievement.earned
+                      ? "bg-gradient-to-r from-green-50 to-blue-50 border-green-200 hover:from-green-100 hover:to-blue-100"
+                      : "bg-gray-50 border-gray-200 hover:bg-gray-100 opacity-60"
+                  }`}
+                >
+                  <div className={`p-3 rounded-full ${achievement.earned ? "bg-white shadow-sm" : "bg-gray-200"}`}>
+                    {achievement.icon}
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-semibold text-gray-900">{achievement.title}</div>
+                    <div className="text-sm text-gray-600">{achievement.description}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className={`text-xs ${achievement.earned ? "text-green-600" : "text-gray-500"}`}>
+                      {achievement.date}
+                    </div>
+                    {achievement.earned && (
+                      <Badge className="mt-1 bg-green-100 text-green-800 hover:bg-green-200">Earned</Badge>
+                    )}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <Award className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>No achievements yet. Start learning to earn your first achievement!</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
