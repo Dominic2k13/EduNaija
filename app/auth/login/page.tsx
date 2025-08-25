@@ -9,8 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { signInWithUsername } from "@/lib/supabase/auth"
-import { toast } from "sonner"
+import { User } from "lucide-react"
+import Link from "next/link"
 
 export default function LoginPage() {
   const [username, setUsername] = useState("")
@@ -22,15 +22,12 @@ export default function LoginPage() {
     if (!username.trim()) return
 
     setLoading(true)
-    try {
-      await signInWithUsername(username.trim())
-      toast.success("Signed in successfully!")
+
+    // Simulate login process
+    setTimeout(() => {
+      // For now, just redirect to games page
       router.push("/games")
-    } catch (error: any) {
-      toast.error(error.message || "Failed to sign in")
-    } finally {
-      setLoading(false)
-    }
+    }, 1000)
   }
 
   return (
@@ -53,32 +50,42 @@ export default function LoginPage() {
           <CardDescription>Sign in to access your learning dashboard</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                type="text"
-                placeholder="Enter your username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                disabled={loading}
-              />
+              <Label htmlFor="username" className="text-base font-medium">
+                Username
+              </Label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="Enter your username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  className="h-12 text-base pl-10"
+                  disabled={loading}
+                />
+              </div>
             </div>
-            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={loading}>
+
+            <Button
+              type="submit"
+              className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-base font-medium"
+              disabled={loading}
+            >
               {loading ? "Signing In..." : "Sign In"}
             </Button>
           </form>
-          <div className="text-center mt-4">
-            <Button
-              variant="link"
-              onClick={() => router.push("/auth/register")}
-              className="text-blue-600 hover:text-blue-700"
-              disabled={loading}
-            >
-              New to HighScore? Create account
-            </Button>
+
+          <div className="text-center mt-6">
+            <p className="text-gray-600">
+              New to HighScore?{" "}
+              <Link href="/auth/register" className="text-blue-600 hover:text-blue-700 font-medium">
+                Create account
+              </Link>
+            </p>
           </div>
         </CardContent>
       </Card>

@@ -1,6 +1,5 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -22,83 +21,55 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { getCurrentUser, signOut, type UserProfile } from "@/lib/supabase/auth"
-import { getUserAchievements, type Achievement } from "@/lib/supabase/achievements"
-import { toast } from "sonner"
 
 export default function GamesPage() {
-  const [userData, setUserData] = useState<UserProfile | null>(null)
-  const [achievements, setAchievements] = useState<Achievement[]>([])
-  const [loading, setLoading] = useState(true)
   const router = useRouter()
 
-  useEffect(() => {
-    loadUserData()
-  }, [])
-
-  const loadUserData = async () => {
-    try {
-      const user = await getCurrentUser()
-      if (!user) {
-        router.push("/auth/login")
-        return
-      }
-
-      setUserData(user)
-
-      // Load user achievements
-      const userAchievements = await getUserAchievements(user.id)
-      setAchievements(userAchievements)
-    } catch (error) {
-      console.error("Error loading user data:", error)
-      toast.error("Failed to load user data")
-      router.push("/auth/login")
-    } finally {
-      setLoading(false)
-    }
+  // Mock user data for display
+  const userData = {
+    username: "Player123",
+    rank: "Bronze",
+    coins: 250,
+    xp: 750,
+    total_matches: 15,
+    win_rate: 68,
+    best_subject: "Math",
   }
 
-  const handleLogout = async () => {
-    try {
-      await signOut()
-      router.push("/auth/login")
-    } catch (error) {
-      console.error("Logout error:", error)
-      toast.error("Failed to sign out")
-    }
+  const handleLogout = () => {
+    router.push("/auth/login")
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your dashboard...</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (!userData) {
-    return null
-  }
-
-  const recentAchievements = achievements.slice(0, 4).map((achievement) => ({
-    title: achievement.title,
-    description: achievement.description,
-    icon:
-      achievement.icon === "trophy" ? (
-        <Trophy className="w-6 h-6 text-orange-500" />
-      ) : achievement.icon === "zap" ? (
-        <Zap className="w-6 h-6 text-blue-500" />
-      ) : achievement.icon === "star" ? (
-        <Star className="w-6 h-6 text-yellow-500" />
-      ) : (
-        <Shield className="w-6 h-6 text-green-500" />
-      ),
-    earned: !!achievement.earned_at,
-    date: achievement.earned_at ? new Date(achievement.earned_at).toLocaleDateString() : "Locked",
-  }))
+  const recentAchievements = [
+    {
+      title: "First Steps",
+      description: "Complete your first quiz",
+      icon: <Trophy className="w-6 h-6 text-orange-500" />,
+      earned: true,
+      date: "2 days ago",
+    },
+    {
+      title: "Quick Learner",
+      description: "Answer 10 questions correctly",
+      icon: <Zap className="w-6 h-6 text-blue-500" />,
+      earned: true,
+      date: "1 day ago",
+    },
+    {
+      title: "Math Wizard",
+      description: "Score 80% in mathematics",
+      icon: <Star className="w-6 h-6 text-yellow-500" />,
+      earned: false,
+      date: "Locked",
+    },
+    {
+      title: "Streak Master",
+      description: "Maintain a 5-day learning streak",
+      icon: <Shield className="w-6 h-6 text-green-500" />,
+      earned: false,
+      date: "Locked",
+    },
+  ]
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
@@ -253,39 +224,32 @@ export default function GamesPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {recentAchievements.length > 0 ? (
-              recentAchievements.map((achievement, index) => (
-                <div
-                  key={index}
-                  className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 hover:shadow-md transform hover:scale-[1.02] cursor-pointer ${
-                    achievement.earned
-                      ? "bg-gradient-to-r from-green-50 to-blue-50 border-green-200 hover:from-green-100 hover:to-blue-100"
-                      : "bg-gray-50 border-gray-200 hover:bg-gray-100 opacity-60"
-                  }`}
-                >
-                  <div className={`p-3 rounded-full ${achievement.earned ? "bg-white shadow-sm" : "bg-gray-200"}`}>
-                    {achievement.icon}
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-semibold text-gray-900">{achievement.title}</div>
-                    <div className="text-sm text-gray-600">{achievement.description}</div>
-                  </div>
-                  <div className="text-right">
-                    <div className={`text-xs ${achievement.earned ? "text-green-600" : "text-gray-500"}`}>
-                      {achievement.date}
-                    </div>
-                    {achievement.earned && (
-                      <Badge className="mt-1 bg-green-100 text-green-800 hover:bg-green-200">Earned</Badge>
-                    )}
-                  </div>
+            {recentAchievements.map((achievement, index) => (
+              <div
+                key={index}
+                className={`flex items-center gap-4 p-4 rounded-xl border transition-all duration-300 hover:shadow-md transform hover:scale-[1.02] cursor-pointer ${
+                  achievement.earned
+                    ? "bg-gradient-to-r from-green-50 to-blue-50 border-green-200 hover:from-green-100 hover:to-blue-100"
+                    : "bg-gray-50 border-gray-200 hover:bg-gray-100 opacity-60"
+                }`}
+              >
+                <div className={`p-3 rounded-full ${achievement.earned ? "bg-white shadow-sm" : "bg-gray-200"}`}>
+                  {achievement.icon}
                 </div>
-              ))
-            ) : (
-              <div className="text-center py-8 text-gray-500">
-                <Award className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No achievements yet. Start learning to earn your first achievement!</p>
+                <div className="flex-1">
+                  <div className="font-semibold text-gray-900">{achievement.title}</div>
+                  <div className="text-sm text-gray-600">{achievement.description}</div>
+                </div>
+                <div className="text-right">
+                  <div className={`text-xs ${achievement.earned ? "text-green-600" : "text-gray-500"}`}>
+                    {achievement.date}
+                  </div>
+                  {achievement.earned && (
+                    <Badge className="mt-1 bg-green-100 text-green-800 hover:bg-green-200">Earned</Badge>
+                  )}
+                </div>
               </div>
-            )}
+            ))}
           </CardContent>
         </Card>
       </div>

@@ -38,3 +38,17 @@ export async function getUserRanking(userId: string): Promise<number> {
     return 0
   }
 }
+
+export async function getUserRank(userId: string): Promise<number | null> {
+  try {
+    const { data, error } = await supabase.from("users").select("id, xp").order("xp", { ascending: false })
+
+    if (error) throw error
+
+    const userIndex = data?.findIndex((user) => user.id === userId)
+    return userIndex !== undefined && userIndex !== -1 ? userIndex + 1 : null
+  } catch (error) {
+    console.error("Error getting user rank:", error)
+    return null
+  }
+}

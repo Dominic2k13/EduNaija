@@ -82,6 +82,40 @@ export async function signInWithUsername(username: string) {
   }
 }
 
+export async function completeProfile(username: string) {
+  try {
+    const {
+      data: { user: authUser },
+    } = await supabase.auth.getUser()
+
+    if (!authUser) throw new Error("Not authenticated")
+
+    // Check if username is available
+    const { data: existingUser } = await supabase.from("users").select("username").eq("username", username).single()
+
+    if (existingUser) {
+      throw new Error("Username already taken")
+    }
+
+    // Update user profile
+    const { data: userData, error: userError } = await supabase
+      .from("users")
+      .update({
+        username,
+      })
+      .eq("id", authUser.id)
+      .select()
+      .single()
+
+    if (userError) throw userError
+
+    return userData
+  } catch (error) {
+    console.error("Complete profile error:", error)
+    throw error
+  }
+}
+
 export async function signOut() {
   const { error } = await supabase.auth.signOut()
   if (error) throw error

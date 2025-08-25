@@ -9,8 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { signUpWithUsername } from "@/lib/supabase/auth"
-import { toast } from "sonner"
+import { User, Mail } from "lucide-react"
+import Link from "next/link"
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("")
@@ -23,15 +23,12 @@ export default function RegisterPage() {
     if (!username.trim()) return
 
     setLoading(true)
-    try {
-      await signUpWithUsername(username.trim(), email.trim() || undefined)
-      toast.success("Account created successfully!")
+
+    // Simulate registration process
+    setTimeout(() => {
+      // For now, just redirect to games page
       router.push("/games")
-    } catch (error: any) {
-      toast.error(error.message || "Failed to create account")
-    } finally {
-      setLoading(false)
-    }
+    }, 1000)
   }
 
   return (
@@ -59,33 +56,41 @@ export default function RegisterPage() {
               <Label htmlFor="username" className="text-base font-medium">
                 Username *
               </Label>
-              <Input
-                id="username"
-                type="text"
-                placeholder="Enter your preferred username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                className="h-12 text-base"
-                maxLength={20}
-                disabled={loading}
-              />
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="Enter your preferred username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  className="h-12 text-base pl-10"
+                  maxLength={20}
+                  disabled={loading}
+                />
+              </div>
               <p className="text-sm text-gray-600">This will be displayed on the Hall of Fame and achievements</p>
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="email" className="text-base font-medium">
                 Email (Optional)
               </Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter your email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-12 text-base"
-                disabled={loading}
-              />
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-12 text-base pl-10"
+                  disabled={loading}
+                />
+              </div>
             </div>
+
             <Button
               type="submit"
               className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-base font-medium"
@@ -94,15 +99,14 @@ export default function RegisterPage() {
               {loading ? "Creating Account..." : "Create Account"}
             </Button>
           </form>
-          <div className="text-center mt-4">
-            <Button
-              variant="link"
-              onClick={() => router.push("/auth/login")}
-              className="text-blue-600 hover:text-blue-700"
-              disabled={loading}
-            >
-              Already have an account? Sign in
-            </Button>
+
+          <div className="text-center mt-6">
+            <p className="text-gray-600">
+              Already have an account?{" "}
+              <Link href="/auth/login" className="text-blue-600 hover:text-blue-700 font-medium">
+                Sign in
+              </Link>
+            </p>
           </div>
         </CardContent>
       </Card>

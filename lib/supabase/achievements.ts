@@ -13,6 +13,19 @@ export interface Achievement {
   earned_at?: string
 }
 
+export async function getAllAchievements(): Promise<Achievement[]> {
+  try {
+    const { data, error } = await supabase.from("achievements").select("*").order("created_at", { ascending: true })
+
+    if (error) throw error
+
+    return data || []
+  } catch (error) {
+    console.error("Error fetching all achievements:", error)
+    return []
+  }
+}
+
 export async function getUserAchievements(userId: string): Promise<Achievement[]> {
   try {
     const { data, error } = await supabase
@@ -102,5 +115,25 @@ export async function checkAndAwardAchievements(
     }
   } catch (error) {
     console.error("Error checking achievements:", error)
+  }
+}
+
+export async function awardAchievement(userId: string, achievementId: string) {
+  try {
+    const { data, error } = await supabase
+      .from("user_achievements")
+      .insert({
+        user_id: userId,
+        achievement_id: achievementId,
+      })
+      .select()
+      .single()
+
+    if (error) throw error
+
+    return data
+  } catch (error) {
+    console.error("Award achievement error:", error)
+    throw error
   }
 }
