@@ -9,31 +9,32 @@ export interface LeaderboardEntry {
   total_matches: number
   win_rate: number
   best_subject: string
-  position: number
+  created_at: string
 }
 
 export async function getLeaderboard(limit = 50): Promise<LeaderboardEntry[]> {
   try {
-    const { data, error } = await supabase.from("leaderboard").select("*").limit(limit)
+    const { data, error } = await supabase.from("users").select("*").order("xp", { ascending: false }).limit(limit)
 
     if (error) throw error
 
     return data || []
   } catch (error) {
-    console.error("Get leaderboard error:", error)
+    console.error("Error fetching leaderboard:", error)
     throw error
   }
 }
 
-export async function getUserRank(userId: string): Promise<number | null> {
+export async function getUserRanking(userId: string): Promise<number> {
   try {
-    const { data, error } = await supabase.from("leaderboard").select("position").eq("id", userId).single()
+    const { data, error } = await supabase.from("users").select("id, xp").order("xp", { ascending: false })
 
     if (error) throw error
 
-    return data?.position || null
+    const userIndex = data?.findIndex((user) => user.id === userId)
+    return userIndex !== undefined && userIndex !== -1 ? userIndex + 1 : 0
   } catch (error) {
-    console.error("Get user rank error:", error)
-    return null
+    console.error("Error getting user ranking:", error)
+    return 0
   }
 }

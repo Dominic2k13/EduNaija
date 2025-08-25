@@ -2,44 +2,45 @@ import { supabase } from "./client"
 
 export interface UserProfile {
   id: string
-  email: string
-  username: string | null
+  username: string
+  email?: string
   rank: string
   coins: number
   xp: number
   total_matches: number
   win_rate: number
   best_subject: string
-  profile_completed: boolean
   created_at: string
   updated_at: string
 }
 
-export async function signUpWithEmail(email: string, password: string) {
+export async function signUpWithUsername(username: string, email?: string) {
   try {
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-    })
+    // First check if username exists
+    const { data: existingUser } = await supabase.from("users").select("username").eq("username", username).single()
+
+    if (existingUser) {
+      throw new Error("Username already exists")
+    }
+
+    // Create anonymous user
+    const { data: authData, error: authError } = await supabase.auth.signInAnonymously()
 
     if (authError) throw authError
-
-    if (!authData.user) throw new Error("Failed to create user")
 
     // Create user profile
     const { data: userData, error: userError } = await supabase
       .from("users")
       .insert({
         id: authData.user.id,
-        email,
-        username: null,
+        username,
+        email: email || null,
         rank: "Bronze",
         coins: 250,
         xp: 150,
         total_matches: 0,
         win_rate: 0.0,
         best_subject: "None",
-        profile_completed: false,
       })
       .select()
       .single()
@@ -53,23 +54,26 @@ export async function signUpWithEmail(email: string, password: string) {
   }
 }
 
-export async function signInWithEmail(email: string, password: string) {
+export async function signInWithUsername(username: string) {
   try {
-    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-
-    if (authError) throw authError
-
-    // Get user profile
+    // Get user by username
     const { data: userData, error: userError } = await supabase
       .from("users")
       .select("*")
-      .eq("id", authData.user.id)
+      .eq("username", username)
       .single()
 
-    if (userError) throw userError
+    if (userError || !userData) {
+      throw new Error("Username not found")
+    }
+
+    // Sign in anonymously (in a real app, you'd use proper auth)
+    const { data: authData, error: authError } = await supabase.auth.signInAnonymously()
+
+    if (authError) throw authError
+
+    // Update the user ID to match the new session
+    await supabase.from("users").update({ id: authData.user.id }).eq("username", username)
 
     return { user: userData, session: authData.session }
   } catch (error) {
@@ -78,53 +82,9 @@ export async function signInWithEmail(email: string, password: string) {
   }
 }
 
-export async function completeProfile(username: string) {
-  try {
-    const {
-      data: { user: authUser },
-    } = await supabase.auth.getUser()
-
-    if (!authUser) throw new Error("Not authenticated")
-
-    // Check if username is available
-    const { data: existingUser } = await supabase.from("users").select("username").eq("username", username).single()
-
-    if (existingUser) {
-      throw new Error("Username already taken")
-    }
-
-    // Update user profile
-    const { data: userData, error: userError } = await supabase
-      .from("users")
-      .update({
-        username,
-        profile_completed: true,
-      })
-      .eq("id", authUser.id)
-      .select()
-      .single()
-
-    if (userError) throw userError
-
-    // Award welcome achievement
-    const { data: welcomeAchievement } = await supabase
-      .from("achievements")
-      .select("id")
-      .eq("title", "Welcome Aboard")
-      .single()
-
-    if (welcomeAchievement) {
-      await supabase.from("user_achievements").insert({
-        user_id: authUser.id,
-        achievement_id: welcomeAchievement.id,
-      })
-    }
-
-    return userData
-  } catch (error) {
-    console.error("Complete profile error:", error)
-    throw error
-  }
+export async function signOut() {
+  const { error } = await supabase.auth.signOut()
+  if (error) throw error
 }
 
 export async function getCurrentUser(): Promise<UserProfile | null> {
@@ -161,9 +121,4 @@ export async function updateUserStats(userId: string, updates: Partial<UserProfi
     console.error("Update user stats error:", error)
     throw error
   }
-}
-
-export async function signOut() {
-  const { error } = await supabase.auth.signOut()
-  if (error) throw error
 }
