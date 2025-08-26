@@ -1,299 +1,296 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
+import { Crown, GamepadIcon, Star, Trophy, Zap } from "lucide-react"
+import Link from "next/link"
+import Leaderboard from "@/components/leaderboard"
 import Image from "next/image"
-import { Trophy, Target, BookOpen, Users, Star, Zap, Award, TrendingUp, Brain } from "lucide-react"
-import { getCurrentUser, type UserProfile } from "@/lib/supabase/auth"
-import { toast } from "sonner"
 
 export default function GamesPage() {
-  const [user, setUser] = useState<UserProfile | null>(null)
-  const [loading, setLoading] = useState(true)
-  const router = useRouter()
-
-  useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const currentUser = await getCurrentUser()
-        if (!currentUser) {
-          router.push("/auth/login")
-          return
-        }
-
-        // Check if profile is completed
-        if (!currentUser.profile_completed) {
-          router.push("/auth/setup-profile")
-          return
-        }
-
-        setUser(currentUser)
-      } catch (error) {
-        console.error("Error checking user:", error)
-        toast.error("Failed to load user data")
-        router.push("/auth/login")
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    checkUser()
-  }, [router])
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading your dashboard...</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (!user) {
-    return null
-  }
+  const [selectedGame, setSelectedGame] = useState<string | null>(null)
 
   const games = [
     {
       id: "quiz-master",
       title: "Quiz Master",
-      description: "Test your knowledge across multiple subjects",
-      icon: Brain,
-      difficulty: "Medium",
+      description: "Answer questions quickly to earn points and climb the leaderboard",
+      difficulty: "Easy",
       players: "1,234",
-      xpReward: "50-150 XP",
-      color: "bg-blue-500",
-      route: "/games/quiz-master",
+      category: "General Knowledge",
+      icon: <Zap className="w-8 h-8 text-orange-500" />,
+      color: "border-orange-500",
+      bgColor: "bg-orange-50",
+      hoverColor: "hover:bg-orange-100",
     },
     {
       id: "math-champion",
       title: "Math Champion",
-      description: "Solve mathematical problems and climb the ranks",
-      icon: Target,
-      difficulty: "Hard",
-      players: "892",
-      xpReward: "75-200 XP",
-      color: "bg-green-500",
-      route: "/games/math-champion",
+      description: "Solve mathematical problems in time-based challenges",
+      difficulty: "Medium",
+      players: "856",
+      category: "Mathematics",
+      icon: <Trophy className="w-8 h-8 text-blue-600" />,
+      color: "border-blue-600",
+      bgColor: "bg-blue-50",
+      hoverColor: "hover:bg-blue-100",
     },
     {
       id: "science-explorer",
       title: "Science Explorer",
-      description: "Discover the wonders of science through interactive challenges",
-      icon: BookOpen,
-      difficulty: "Easy",
-      players: "1,567",
-      xpReward: "25-100 XP",
-      color: "bg-purple-500",
-      route: "/games/science-explorer",
+      description: "Explore physics and chemistry through interactive quizzes",
+      difficulty: "Hard",
+      players: "642",
+      category: "Science",
+      icon: <Star className="w-8 h-8 text-red-600" />,
+      color: "border-red-600",
+      bgColor: "bg-red-50",
+      hoverColor: "hover:bg-red-100",
+    },
+    {
+      id: "word-wizard",
+      title: "Word Wizard",
+      description: "Master English language through vocabulary and grammar games",
+      difficulty: "Medium",
+      players: "1,089",
+      category: "English",
+      icon: <Crown className="w-8 h-8 text-green-600" />,
+      color: "border-green-600",
+      bgColor: "bg-green-50",
+      hoverColor: "hover:bg-green-100",
     },
   ]
 
-  const quickActions = [
-    {
-      title: "Hall of Fame",
-      description: "See top performers",
-      icon: Trophy,
-      route: "/games/leaderboard",
-      color: "bg-yellow-500",
-    },
-    {
-      title: "My Rewards",
-      description: "View achievements",
-      icon: Award,
-      route: "/games/rewards",
-      color: "bg-pink-500",
-    },
-    {
-      title: "Subject Selection",
-      description: "Choose your focus",
-      icon: BookOpen,
-      route: "/games/subject-selection",
-      color: "bg-indigo-500",
-    },
-    {
-      title: "Game Modes",
-      description: "Different ways to play",
-      icon: Zap,
-      route: "/games/mode-selection",
-      color: "bg-orange-500",
-    },
+  const achievements = [
+    { title: "First Victory", description: "Win your first game", unlocked: true },
+    { title: "Speed Demon", description: "Answer 10 questions in under 30 seconds", unlocked: true },
+    { title: "Math Genius", description: "Score 100% in a Math game", unlocked: false },
+    { title: "Streak Master", description: "Maintain a 7-day playing streak", unlocked: false },
   ]
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 relative">
-                <Image
-                  src="/highscore-logo-final.png"
-                  alt="HighScore Logo"
-                  width={40}
-                  height={40}
-                  className="object-contain rounded-lg"
-                />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Welcome back, {user.username}!</h1>
-                <p className="text-gray-600">Ready to continue your learning journey?</p>
-              </div>
+      <header className="border-b bg-white/90 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-16 h-16 relative">
+              <Image
+                src="/highscore-logo-final.png"
+                alt="HighScore Logo"
+                width={64}
+                height={64}
+                className="object-contain rounded-lg"
+              />
             </div>
-            <div className="flex items-center gap-4">
-              <Badge variant="secondary" className="text-sm">
-                <Star className="w-4 h-4 mr-1" />
-                {user.rank}
-              </Badge>
-              <Badge variant="outline" className="text-sm">
-                <Zap className="w-4 h-4 mr-1" />
-                {user.xp} XP
-              </Badge>
-              <Badge variant="outline" className="text-sm">
-                <Trophy className="w-4 h-4 mr-1" />
-                {user.coins} Coins
-              </Badge>
-            </div>
-          </div>
+            <span className="text-2xl font-bold text-blue-900">HighScore</span>
+          </Link>
+          <nav className="hidden md:flex items-center gap-8">
+            <Link
+              href="/tutorials"
+              className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium relative group"
+            >
+              Tutorials
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+            <Link
+              href="/cbt"
+              className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium relative group"
+            >
+              CBT Practice
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+            <Link href="/games" className="text-blue-600 font-medium relative">
+              Games
+              <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-blue-600"></span>
+            </Link>
+            <Link href="/login">
+              <Button
+                variant="outline"
+                className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-105 bg-transparent"
+              >
+                Login
+              </Button>
+            </Link>
+          </nav>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Total Matches</p>
-                  <p className="text-2xl font-bold text-gray-900">{user.total_matches}</p>
-                </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Target className="w-6 h-6 text-blue-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Win Rate</p>
-                  <p className="text-2xl font-bold text-gray-900">{(user.win_rate * 100).toFixed(1)}%</p>
-                </div>
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <TrendingUp className="w-6 h-6 text-green-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Best Subject</p>
-                  <p className="text-2xl font-bold text-gray-900">{user.best_subject}</p>
-                </div>
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <BookOpen className="w-6 h-6 text-purple-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Current Rank</p>
-                  <p className="text-2xl font-bold text-gray-900">{user.rank}</p>
-                </div>
-                <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                  <Award className="w-6 h-6 text-yellow-600" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Progress to Next Rank */}
-        <Card className="mb-8">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Progress to Next Rank</h3>
-              <Badge variant="outline">{user.xp}/1000 XP</Badge>
-            </div>
-            <Progress value={(user.xp / 1000) * 100} className="h-3" />
-            <p className="text-sm text-gray-600 mt-2">{1000 - user.xp} XP needed to reach Silver rank</p>
-          </CardContent>
-        </Card>
-
-        {/* Games Section */}
+      <div className="container mx-auto px-4 py-8">
+        {/* Page Header */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Available Games</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {games.map((game) => (
-              <Card key={game.id} className="hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className={`w-12 h-12 ${game.color} rounded-lg flex items-center justify-center`}>
-                      <game.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <Badge variant="outline">{game.difficulty}</Badge>
-                  </div>
-                  <CardTitle className="text-xl">{game.title}</CardTitle>
-                  <CardDescription>{game.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="flex items-center gap-1">
-                        <Users className="w-4 h-4" />
-                        {game.players} players
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Star className="w-4 h-4" />
-                        {game.xpReward}
-                      </span>
-                    </div>
-                    <Button className="w-full" onClick={() => router.push(game.route)}>
-                      Play Now
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Learning Games</h1>
+          <p className="text-gray-600 mb-6">
+            Make learning fun with our gamified quiz platform. Compete with friends and earn achievements!
+          </p>
         </div>
 
-        {/* Quick Actions */}
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {quickActions.map((action) => (
-              <Card
-                key={action.title}
-                className="hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => router.push(action.route)}
-              >
-                <CardContent className="p-4 text-center">
-                  <div className={`w-12 h-12 ${action.color} rounded-lg flex items-center justify-center mx-auto mb-3`}>
-                    <action.icon className="w-6 h-6 text-white" />
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2">
+            {/* Games Grid */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-semibold mb-6 text-gray-900">Choose Your Game</h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                {games.map((game) => (
+                  <div key={game.id}>
+                    <Link href={`/games/${game.id}`}>
+                      <Card
+                        className={`border-l-4 ${game.color} ${game.bgColor} hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer group overflow-hidden relative`}
+                      >
+                        <div
+                          className={`absolute inset-0 ${game.hoverColor} opacity-0 group-hover:opacity-100 transition-all duration-300`}
+                        ></div>
+                        <CardHeader className="relative z-10">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
+                                {game.icon}
+                              </div>
+                              <div>
+                                <CardTitle className="text-lg text-gray-900 group-hover:text-gray-800 transition-colors duration-300">
+                                  {game.title}
+                                </CardTitle>
+                                <Badge variant="outline" className="mt-1 border-gray-400 text-gray-600">
+                                  {game.category}
+                                </Badge>
+                              </div>
+                            </div>
+                            <Badge
+                              variant={
+                                game.difficulty === "Easy"
+                                  ? "secondary"
+                                  : game.difficulty === "Medium"
+                                    ? "default"
+                                    : "destructive"
+                              }
+                              className="transform transition-all duration-300 group-hover:scale-105"
+                            >
+                              {game.difficulty}
+                            </Badge>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="relative z-10">
+                          <CardDescription className="mb-4 text-gray-600">{game.description}</CardDescription>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-1 text-sm text-gray-600">
+                              <GamepadIcon className="w-4 h-4" />
+                              <span>{game.players} players</span>
+                            </div>
+                            <Button
+                              size="sm"
+                              className="bg-blue-600 hover:bg-blue-700 text-white transform transition-all duration-300 group-hover:scale-105"
+                            >
+                              Play Now
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
                   </div>
-                  <h3 className="font-semibold text-sm">{action.title}</h3>
-                  <p className="text-xs text-gray-600 mt-1">{action.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+                ))}
+              </div>
+            </div>
+
+            {/* Player Stats */}
+            <Card className="hover:shadow-lg transition-all duration-300">
+              <CardHeader>
+                <CardTitle className="text-gray-900">Your Gaming Stats</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="text-center group cursor-pointer">
+                    <div className="transform transition-all duration-300 group-hover:scale-110">
+                      <div className="text-2xl font-bold text-blue-600">1,250</div>
+                      <div className="text-sm text-gray-600">Total Points</div>
+                    </div>
+                  </div>
+                  <div className="text-center group cursor-pointer">
+                    <div className="transform transition-all duration-300 group-hover:scale-110">
+                      <div className="text-2xl font-bold text-green-600">18</div>
+                      <div className="text-sm text-gray-600">Games Won</div>
+                    </div>
+                  </div>
+                  <div className="text-center group cursor-pointer">
+                    <div className="transform transition-all duration-300 group-hover:scale-110">
+                      <div className="text-2xl font-bold text-red-600">85%</div>
+                      <div className="text-sm text-gray-600">Accuracy</div>
+                    </div>
+                  </div>
+                  <div className="text-center group cursor-pointer">
+                    <div className="transform transition-all duration-300 group-hover:scale-110">
+                      <div className="text-2xl font-bold text-orange-500">7</div>
+                      <div className="text-sm text-gray-600">Day Streak</div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Leaderboard */}
+            <Leaderboard showAllGames={false} />
+
+            {/* Achievements */}
+            <Card className="hover:shadow-lg transition-all duration-300">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-gray-900">
+                  <Star className="w-5 h-5 text-orange-500" />
+                  Achievements
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {achievements.map((achievement, index) => (
+                  <div
+                    key={index}
+                    className={`p-3 rounded-lg border transition-all duration-300 hover:shadow-md transform hover:scale-105 cursor-pointer ${
+                      achievement.unlocked
+                        ? "bg-green-50 border-green-200 hover:bg-green-100"
+                        : "bg-gray-50 border-gray-200 hover:bg-gray-100"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <div
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                          achievement.unlocked ? "bg-green-500" : "bg-gray-400"
+                        }`}
+                      />
+                      <div className="font-medium text-sm text-gray-900">{achievement.title}</div>
+                    </div>
+                    <div className="text-xs text-gray-600">{achievement.description}</div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Daily Challenge */}
+            <Card className="hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-gray-900">
+                  <Zap className="w-5 h-5 text-orange-500" />
+                  Daily Challenge
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="mb-4">
+                  <div className="font-medium mb-2 text-gray-900">Mathematics Sprint</div>
+                  <div className="text-sm text-gray-600 mb-3">Solve 20 math problems in under 5 minutes</div>
+                  <Progress value={60} className="mb-2" />
+                  <div className="text-xs text-gray-500">12/20 completed</div>
+                </div>
+                <Button
+                  className="w-full bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform hover:scale-105"
+                  size="sm"
+                >
+                  Continue Challenge
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
