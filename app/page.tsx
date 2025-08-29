@@ -20,6 +20,7 @@ import {
   X,
   Bot,
   User,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -42,6 +43,8 @@ export default function HomePage() {
     } else {
       router.push("/login");
     }
+
+    setIsMenuOpen(false);
   }
 
   return (
@@ -157,28 +160,45 @@ export default function HomePage() {
               >
                 Games
               </Link> */}
-              <Link
+              <button
+                // href="/games"
+                className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium relative group"
+                onClick={onHandleGameClick}
+              >
+                Games
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
+              </button>
+              {/* <Link
                 href="/leaderboard"
                 className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium py-2 px-4 rounded-lg hover:bg-blue-50"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Leaderboard
-              </Link>
-              <div className="flex flex-col space-y-2 pt-4 border-t border-gray-200">
-                <Link href="/login" onClick={() => setIsMenuOpen(false)}>
-                  <Button
-                    variant="outline"
-                    className="w-full border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white bg-transparent"
-                  >
-                    Login
-                  </Button>
-                </Link>
-                <Link href="/signup" onClick={() => setIsMenuOpen(false)}>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                    Sign Up
-                  </Button>
-                </Link>
-              </div>
+              </Link> */}
+              {username ? (
+                <button
+                  className="p-2 rounded-full hover:bg-blue-100 transition-colors w-full"
+                  onClick={() => router.push("/dashboard")}
+                >
+                  Dashboard <User className="w-7 h-7 text-blue-600" />
+                </button>
+              ) : (
+                <div className="flex flex-col space-y-2 pt-4 border-t border-gray-200">
+                  <Link href="/login" onClick={() => setIsMenuOpen(false)}>
+                    <Button
+                      variant="outline"
+                      className="w-full border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white bg-transparent"
+                    >
+                      Login
+                    </Button>
+                  </Link>
+                  <Link href="/signup" onClick={() => setIsMenuOpen(false)}>
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                      Sign Up
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </nav>
           </div>
         )}
@@ -364,14 +384,14 @@ export default function HomePage() {
               <CardHeader>
                 <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-500 transition-all duration-300">
                   {/* <GamepadIcon className="w-8 h-8 text-orange-500 group-hover:text-white transition-all duration-300" /> */}
-                  <Trophy className="w-8 h-8 text-orange-500 group-hover:text-white transition-all duration-300" />
+                  <Zap className="w-8 h-8 text-orange-500 group-hover:text-white transition-all duration-300" />
                 </div>
                 <CardTitle className="text-gray-900">
-                  Gamified learning
+                  Real-time competition
                 </CardTitle>
                 <CardDescription>
-                  Earn badges, climb leaderboards, and unlock achievements as
-                  you learn.
+                  Compete live with other students, and see your ranking
+                  instantly on the leaderboard.
                 </CardDescription>
               </CardHeader>
               <CardContent>

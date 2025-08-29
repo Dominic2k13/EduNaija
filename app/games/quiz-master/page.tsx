@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
-import { BookOpen, Clock, Trophy, ArrowRight, RotateCcw } from "lucide-react"
-import Link from "next/link"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { BookOpen, Clock, Trophy, ArrowRight, RotateCcw } from "lucide-react";
+import Link from "next/link";
 
 interface Question {
-  id: number
-  question: string
-  options: string[]
-  correctAnswer: number
-  subject: string
-  difficulty: "Easy" | "Medium" | "Hard"
+  id: number;
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  subject: string;
+  difficulty: "Easy" | "Medium" | "Hard";
 }
 
 const questions: Question[] = [
@@ -63,7 +63,8 @@ const questions: Question[] = [
   // English Language Questions
   {
     id: 6,
-    question: "Choose the option that best completes the sentence: 'The committee _____ its decision yesterday.'",
+    question:
+      "Choose the option that best completes the sentence: 'The committee _____ its decision yesterday.'",
     options: ["A. announce", "B. announced", "C. announcing", "D. announces"],
     correctAnswer: 1,
     subject: "English Language",
@@ -72,7 +73,12 @@ const questions: Question[] = [
   {
     id: 7,
     question: "Who wrote the novel 'Things Fall Apart'?",
-    options: ["A. Wole Soyinka", "B. Chinua Achebe", "C. Chimamanda Adichie", "D. Ben Okri"],
+    options: [
+      "A. Wole Soyinka",
+      "B. Chinua Achebe",
+      "C. Chimamanda Adichie",
+      "D. Ben Okri",
+    ],
     correctAnswer: 1,
     subject: "English Language",
     difficulty: "Medium",
@@ -100,7 +106,8 @@ const questions: Question[] = [
   },
   {
     id: 10,
-    question: "In the sentence 'The dog barked loudly', what part of speech is 'loudly'?",
+    question:
+      "In the sentence 'The dog barked loudly', what part of speech is 'loudly'?",
     options: ["A. Noun", "B. Verb", "C. Adjective", "D. Adverb"],
     correctAnswer: 3,
     subject: "English Language",
@@ -205,7 +212,12 @@ const questions: Question[] = [
   {
     id: 21,
     question: "The powerhouse of the cell is:",
-    options: ["A. Nucleus", "B. Mitochondria", "C. Ribosome", "D. Golgi apparatus"],
+    options: [
+      "A. Nucleus",
+      "B. Mitochondria",
+      "C. Ribosome",
+      "D. Golgi apparatus",
+    ],
     correctAnswer: 1,
     subject: "Biology",
     difficulty: "Easy",
@@ -255,7 +267,12 @@ const questions: Question[] = [
   {
     id: 27,
     question: "Which river is the longest in Nigeria?",
-    options: ["A. River Benue", "B. River Niger", "C. River Kaduna", "D. River Cross"],
+    options: [
+      "A. River Benue",
+      "B. River Niger",
+      "C. River Kaduna",
+      "D. River Cross",
+    ],
     correctAnswer: 1,
     subject: "Geography",
     difficulty: "Medium",
@@ -263,7 +280,12 @@ const questions: Question[] = [
   {
     id: 28,
     question: "The imaginary line at 0° latitude is called:",
-    options: ["A. Prime Meridian", "B. Tropic of Cancer", "C. Equator", "D. Tropic of Capricorn"],
+    options: [
+      "A. Prime Meridian",
+      "B. Tropic of Cancer",
+      "C. Equator",
+      "D. Tropic of Capricorn",
+    ],
     correctAnswer: 2,
     subject: "Geography",
     difficulty: "Easy",
@@ -284,63 +306,66 @@ const questions: Question[] = [
     subject: "Geography",
     difficulty: "Easy",
   },
-]
+];
 
 export default function QuizMasterGame() {
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
-  const [score, setScore] = useState(0)
-  const [timeLeft, setTimeLeft] = useState(30)
-  const [gameStarted, setGameStarted] = useState(false)
-  const [gameEnded, setGameEnded] = useState(false)
-  const [answers, setAnswers] = useState<number[]>([])
-  const [showResult, setShowResult] = useState(false)
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameEnded, setGameEnded] = useState(false);
+  const [answers, setAnswers] = useState<number[]>([]);
+  const [showResult, setShowResult] = useState(false);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout
+    let timer: NodeJS.Timeout;
     if (gameStarted && !gameEnded && timeLeft > 0) {
-      timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
+      timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
     } else if (timeLeft === 0 && gameStarted) {
-      handleNextQuestion()
+      handleNextQuestion();
     }
-    return () => clearTimeout(timer)
-  }, [timeLeft, gameStarted, gameEnded])
+    return () => clearTimeout(timer);
+  }, [timeLeft, gameStarted, gameEnded]);
 
   const startGame = () => {
-    setGameStarted(true)
-    setCurrentQuestion(0)
-    setScore(0)
-    setAnswers([])
-    setTimeLeft(30)
-    setGameEnded(false)
-    setShowResult(false)
-  }
+    setGameStarted(true);
+    setCurrentQuestion(0);
+    setScore(0);
+    setAnswers([]);
+    setTimeLeft(30);
+    setGameEnded(false);
+    setShowResult(false);
+  };
 
   const handleAnswerSelect = (answerIndex: number) => {
-    setSelectedAnswer(answerIndex)
-  }
+    setSelectedAnswer(answerIndex);
+  };
 
   const handleNextQuestion = () => {
-    const newAnswers = [...answers, selectedAnswer ?? -1]
-    setAnswers(newAnswers)
+    const newAnswers = [...answers, selectedAnswer ?? -1];
+    setAnswers(newAnswers);
 
     if (selectedAnswer === questions[currentQuestion].correctAnswer) {
-      const timeBonus = Math.floor(timeLeft / 5)
-      setScore(score + 10 + timeBonus)
+      const timeBonus = Math.floor(timeLeft / 5);
+      setScore(score + 10 + timeBonus);
     }
 
     if (currentQuestion + 1 < questions.length) {
-      setCurrentQuestion(currentQuestion + 1)
-      setSelectedAnswer(null)
-      setTimeLeft(30)
+      setCurrentQuestion(currentQuestion + 1);
+      setSelectedAnswer(null);
+      setTimeLeft(30);
     } else {
-      setGameEnded(true)
-      setShowResult(true)
+      setGameEnded(true);
+      setShowResult(true);
       saveGameResult(
-        score + (selectedAnswer === questions[currentQuestion].correctAnswer ? 10 + Math.floor(timeLeft / 5) : 0),
-      )
+        score +
+          (selectedAnswer === questions[currentQuestion].correctAnswer
+            ? 10 + Math.floor(timeLeft / 5)
+            : 0)
+      );
     }
-  }
+  };
 
   const saveGameResult = (finalScore: number) => {
     const gameData = {
@@ -348,48 +373,53 @@ export default function QuizMasterGame() {
       date: new Date().toISOString(),
       questionsAnswered: questions.length,
       correctAnswers:
-        answers.filter((answer, index) => answer === questions[index].correctAnswer).length +
+        answers.filter(
+          (answer, index) => answer === questions[index].correctAnswer
+        ).length +
         (selectedAnswer === questions[currentQuestion].correctAnswer ? 1 : 0),
-    }
+    };
 
-    const existingData = localStorage.getItem("quizMasterResults") || "[]"
-    const results = JSON.parse(existingData)
-    results.push(gameData)
-    localStorage.setItem("quizMasterResults", JSON.stringify(results))
+    const existingData = localStorage.getItem("quizMasterResults") || "[]";
+    const results = JSON.parse(existingData);
+    results.push(gameData);
+    localStorage.setItem("quizMasterResults", JSON.stringify(results));
 
     // Update leaderboard
-    const leaderboardData = localStorage.getItem("gameLeaderboard") || "[]"
-    const leaderboard = JSON.parse(leaderboardData)
+    const leaderboardData = localStorage.getItem("gameLeaderboard") || "[]";
+    const leaderboard = JSON.parse(leaderboardData);
     leaderboard.push({
       name: "You",
       score: finalScore,
       game: "Quiz Master",
       date: new Date().toISOString(),
-    })
-    leaderboard.sort((a: any, b: any) => b.score - a.score)
-    localStorage.setItem("gameLeaderboard", JSON.stringify(leaderboard.slice(0, 10)))
-  }
+    });
+    leaderboard.sort((a: any, b: any) => b.score - a.score);
+    localStorage.setItem(
+      "gameLeaderboard",
+      JSON.stringify(leaderboard.slice(0, 10))
+    );
+  };
 
   const resetGame = () => {
-    setCurrentQuestion(0)
-    setSelectedAnswer(null)
-    setScore(0)
-    setTimeLeft(30)
-    setGameStarted(false)
-    setGameEnded(false)
-    setAnswers([])
-    setShowResult(false)
-  }
+    setCurrentQuestion(0);
+    setSelectedAnswer(null);
+    setScore(0);
+    setTimeLeft(30);
+    setGameStarted(false);
+    setGameEnded(false);
+    setAnswers([]);
+    setShowResult(false);
+  };
 
   if (!gameStarted) {
     return (
       <div className="min-h-screen bg-gray-50">
         <header className="border-b bg-white sticky top-0 z-50">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
+            {/* <Link href="/" className="flex items-center gap-2">
               <BookOpen className="h-8 w-8 text-blue-600" />
               <span className="text-2xl font-bold text-gray-900">EduNaija</span>
-            </Link>
+            </Link> */}
             <Link href="/games">
               <Button variant="outline">Back to Games</Button>
             </Link>
@@ -400,9 +430,12 @@ export default function QuizMasterGame() {
           <div className="max-w-2xl mx-auto text-center">
             <div className="mb-8">
               <Trophy className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">Quiz Master</h1>
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                Quiz Master
+              </h1>
               <p className="text-xl text-gray-600 mb-8">
-                Test your knowledge across multiple subjects. Answer quickly to earn bonus points!
+                Test your knowledge across multiple subjects. Answer quickly to
+                earn bonus points!
               </p>
             </div>
 
@@ -415,7 +448,9 @@ export default function QuizMasterGame() {
                   <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                     <span className="text-blue-600 font-bold">1</span>
                   </div>
-                  <span>Answer {questions.length} questions from various subjects</span>
+                  <span>
+                    Answer {questions.length} questions from various subjects
+                  </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
@@ -444,24 +479,29 @@ export default function QuizMasterGame() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (showResult) {
     const finalScore =
-      score + (selectedAnswer === questions[currentQuestion]?.correctAnswer ? 10 + Math.floor(timeLeft / 5) : 0)
+      score +
+      (selectedAnswer === questions[currentQuestion]?.correctAnswer
+        ? 10 + Math.floor(timeLeft / 5)
+        : 0);
     const correctAnswers =
-      answers.filter((answer, index) => answer === questions[index].correctAnswer).length +
-      (selectedAnswer === questions[currentQuestion]?.correctAnswer ? 1 : 0)
+      answers.filter(
+        (answer, index) => answer === questions[index].correctAnswer
+      ).length +
+      (selectedAnswer === questions[currentQuestion]?.correctAnswer ? 1 : 0);
 
     return (
       <div className="min-h-screen bg-gray-50">
         <header className="border-b bg-white sticky top-0 z-50">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
+            {/* <Link href="/" className="flex items-center gap-2">
               <BookOpen className="h-8 w-8 text-blue-600" />
               <span className="text-2xl font-bold text-gray-900">EduNaija</span>
-            </Link>
+            </Link> */}
             <Link href="/games">
               <Button variant="outline">Back to Games</Button>
             </Link>
@@ -471,16 +511,22 @@ export default function QuizMasterGame() {
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-2xl mx-auto text-center">
             <Trophy className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Quiz Complete!</h1>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              Quiz Complete!
+            </h1>
 
             <Card className="mb-8">
               <CardContent className="pt-6">
-                <div className="text-6xl font-bold text-blue-600 mb-4">{finalScore}</div>
+                <div className="text-6xl font-bold text-blue-600 mb-4">
+                  {finalScore}
+                </div>
                 <div className="text-xl text-gray-600 mb-6">Final Score</div>
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">{correctAnswers}</div>
+                    <div className="text-2xl font-bold text-green-600">
+                      {correctAnswers}
+                    </div>
                     <div className="text-sm text-gray-600">Correct Answers</div>
                   </div>
                   <div className="text-center">
@@ -492,9 +538,17 @@ export default function QuizMasterGame() {
                 </div>
 
                 <div className="space-y-2">
-                  {finalScore >= 80 && <Badge className="bg-green-500">Excellent Performance!</Badge>}
-                  {finalScore >= 60 && finalScore < 80 && <Badge className="bg-blue-500">Good Job!</Badge>}
-                  {finalScore < 60 && <Badge variant="secondary">Keep Practicing!</Badge>}
+                  {finalScore >= 80 && (
+                    <Badge className="bg-green-500">
+                      Excellent Performance!
+                    </Badge>
+                  )}
+                  {finalScore >= 60 && finalScore < 80 && (
+                    <Badge className="bg-blue-500">Good Job!</Badge>
+                  )}
+                  {finalScore < 60 && (
+                    <Badge variant="secondary">Keep Practicing!</Badge>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -513,18 +567,18 @@ export default function QuizMasterGame() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="border-b bg-white sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
+          {/* <Link href="/" className="flex items-center gap-2">
             <BookOpen className="h-8 w-8 text-blue-600" />
             <span className="text-2xl font-bold text-gray-900">EduNaija</span>
-          </Link>
-          <div className="flex items-center gap-4">
+          </Link> */}
+          <div className="flex items-center gap-4 justify-between w-full">
             <div className="flex items-center gap-2">
               <Trophy className="w-5 h-5 text-yellow-500" />
               <span className="font-bold">{score}</span>
@@ -545,12 +599,18 @@ export default function QuizMasterGame() {
                 <h1 className="text-2xl font-bold">
                   Question {currentQuestion + 1} of {questions.length}
                 </h1>
-                <Badge variant="outline">{questions[currentQuestion].subject}</Badge>
+                <Badge variant="outline">
+                  {questions[currentQuestion].subject}
+                </Badge>
               </div>
               <div className="text-right">
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="w-5 h-5 text-red-500" />
-                  <span className={`text-2xl font-bold ${timeLeft <= 10 ? "text-red-500" : "text-gray-900"}`}>
+                  <span
+                    className={`text-2xl font-bold ${
+                      timeLeft <= 10 ? "text-red-500" : "text-gray-900"
+                    }`}
+                  >
                     {timeLeft}s
                   </span>
                 </div>
@@ -559,21 +619,26 @@ export default function QuizMasterGame() {
                     questions[currentQuestion].difficulty === "Easy"
                       ? "secondary"
                       : questions[currentQuestion].difficulty === "Medium"
-                        ? "default"
-                        : "destructive"
+                      ? "default"
+                      : "destructive"
                   }
                 >
                   {questions[currentQuestion].difficulty}
                 </Badge>
               </div>
             </div>
-            <Progress value={(currentQuestion / questions.length) * 100} className="mb-4" />
+            <Progress
+              value={(currentQuestion / questions.length) * 100}
+              className="mb-4"
+            />
           </div>
 
           {/* Question */}
           <Card className="mb-8">
             <CardHeader>
-              <CardTitle className="text-xl">{questions[currentQuestion].question}</CardTitle>
+              <CardTitle className="text-xl">
+                {questions[currentQuestion].question}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid gap-3">
@@ -581,7 +646,11 @@ export default function QuizMasterGame() {
                   <Button
                     key={index}
                     variant={selectedAnswer === index ? "default" : "outline"}
-                    className={`p-4 h-auto text-left justify-start ${selectedAnswer === index ? "bg-blue-600" : "bg-transparent"}`}
+                    className={`p-4 h-auto text-left justify-start ${
+                      selectedAnswer === index
+                        ? "bg-blue-600"
+                        : "bg-transparent"
+                    }`}
                     onClick={() => handleAnswerSelect(index)}
                   >
                     {option}
@@ -593,13 +662,19 @@ export default function QuizMasterGame() {
 
           {/* Next Button */}
           <div className="text-center">
-            <Button onClick={handleNextQuestion} disabled={selectedAnswer === null} size="lg">
-              {currentQuestion + 1 === questions.length ? "Finish Quiz" : "Next Question"}
+            <Button
+              onClick={handleNextQuestion}
+              disabled={selectedAnswer === null}
+              size="lg"
+            >
+              {currentQuestion + 1 === questions.length
+                ? "Finish Quiz"
+                : "Next Question"}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
