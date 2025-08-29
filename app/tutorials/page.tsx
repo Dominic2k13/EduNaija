@@ -4,15 +4,24 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Play, Search, Star } from "lucide-react";
+import { BookOpen, Play, Search, Star, User } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function TutorialsPage() {
   const [selectedVideo, setSelectedVideo] = useState<any>(null);
   const [showVideoPlayer, setShowVideoPlayer] = useState(false);
 
+  const router = useRouter();
+  const [username, setUsername] = useState<string | null>(null);
+
+  useEffect(() => {
+    // runs only in the browser
+    const stored = localStorage.getItem("username");
+    setUsername(stored);
+  }, []);
   const subjects = [
     { name: "Mathematics", videos: 150, color: "bg-blue-500" },
     { name: "English Language", videos: 120, color: "bg-green-500" },
@@ -28,7 +37,7 @@ export default function TutorialsPage() {
       duration: "25:30",
       views: "12.5K",
       rating: 4.8,
-      thumbnail: "/placeholder.svg?height=200&width=300",
+      thumbnail: "/maths.jpg?height=200&width=300",
       subject: "Mathematics",
     },
     {
@@ -36,7 +45,7 @@ export default function TutorialsPage() {
       duration: "18:45",
       views: "8.2K",
       rating: 4.9,
-      thumbnail: "/placeholder.svg?height=200&width=300",
+      thumbnail: "/english.jpg?height=200&width=300",
       subject: "English",
     },
     {
@@ -44,7 +53,7 @@ export default function TutorialsPage() {
       duration: "32:15",
       views: "15.3K",
       rating: 4.7,
-      thumbnail: "/placeholder.svg?height=200&width=300",
+      thumbnail: "/physics.jpg?height=200&width=300",
       subject: "Physics",
     },
     {
@@ -52,7 +61,7 @@ export default function TutorialsPage() {
       duration: "28:20",
       views: "9.8K",
       rating: 4.8,
-      thumbnail: "/placeholder.svg?height=200&width=300",
+      thumbnail: "/chem.jpg?height=200&width=300",
       subject: "Chemistry",
     },
   ];
@@ -87,9 +96,18 @@ export default function TutorialsPage() {
             {/* <Link href="/games" className="text-gray-600 hover:text-blue-600 transition-colors">
               Games
             </Link> */}
-            <Link href="/login">
-              <Button variant="outline">Login</Button>
-            </Link>
+            {username ? (
+              <button
+                className="p-2 rounded-full hover:bg-blue-100 transition-colors"
+                onClick={() => router.push("/dashboard")}
+              >
+                <User className="w-7 h-7 text-blue-600" />
+              </button>
+            ) : (
+              <Link href="/login">
+                <Button variant="outline">Login</Button>
+              </Link>
+            )}
           </nav>
         </div>
       </header>
