@@ -1,182 +1,207 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
-import { BookOpen, Clock, Trophy, ArrowRight, RotateCcw, Calculator } from "lucide-react"
-import Link from "next/link"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import {
+  BookOpen,
+  Clock,
+  Trophy,
+  ArrowRight,
+  RotateCcw,
+  Calculator,
+} from "lucide-react";
+import Link from "next/link";
 
 interface MathQuestion {
-  id: number
-  question: string
-  answer: number
-  options: string[]
-  difficulty: "Easy" | "Medium" | "Hard"
-  type: string
+  id: number;
+  question: string;
+  answer: number;
+  options: string[];
+  difficulty: "Easy" | "Medium" | "Hard";
+  type: string;
 }
 
-const generateMathQuestion = (difficulty: "Easy" | "Medium" | "Hard"): MathQuestion => {
-  const id = Math.random()
+const generateMathQuestion = (
+  difficulty: "Easy" | "Medium" | "Hard"
+): MathQuestion => {
+  const id = Math.random();
 
   if (difficulty === "Easy") {
-    const a = Math.floor(Math.random() * 20) + 1
-    const b = Math.floor(Math.random() * 20) + 1
-    const operations = ["+", "-", "×"]
-    const op = operations[Math.floor(Math.random() * operations.length)]
+    const a = Math.floor(Math.random() * 20) + 1;
+    const b = Math.floor(Math.random() * 20) + 1;
+    const operations = ["+", "-", "×"];
+    const op = operations[Math.floor(Math.random() * operations.length)];
 
-    let question: string
-    let answer: number
+    let question: string;
+    let answer: number;
 
     switch (op) {
       case "+":
-        question = `${a} + ${b} = ?`
-        answer = a + b
-        break
+        question = `${a} + ${b} = ?`;
+        answer = a + b;
+        break;
       case "-":
-        question = `${a + b} - ${b} = ?`
-        answer = a
-        break
+        question = `${a + b} - ${b} = ?`;
+        answer = a;
+        break;
       case "×":
-        question = `${a} × ${b} = ?`
-        answer = a * b
-        break
+        question = `${a} × ${b} = ?`;
+        answer = a * b;
+        break;
       default:
-        question = `${a} + ${b} = ?`
-        answer = a + b
+        question = `${a} + ${b} = ?`;
+        answer = a + b;
     }
 
     const wrongAnswers = [
       answer + Math.floor(Math.random() * 10) + 1,
       answer - Math.floor(Math.random() * 10) - 1,
       answer + Math.floor(Math.random() * 5) + 1,
-    ].filter((x) => x !== answer && x > 0)
+    ].filter((x) => x !== answer && x > 0);
 
-    const allOptions = [answer, ...wrongAnswers.slice(0, 3)]
-    const options = allOptions.map((opt, idx) => `${String.fromCharCode(65 + idx)}. ${opt}`)
+    const allOptions = [answer, ...wrongAnswers.slice(0, 3)];
+    const options = allOptions.map(
+      (opt, idx) => `${String.fromCharCode(65 + idx)}. ${opt}`
+    );
 
-    return { id, question, answer, options, difficulty, type: "Arithmetic" }
+    return { id, question, answer, options, difficulty, type: "Arithmetic" };
   }
 
   if (difficulty === "Medium") {
-    const questionTypes = ["algebra", "percentage", "fraction"]
-    const type = questionTypes[Math.floor(Math.random() * questionTypes.length)]
+    const questionTypes = ["algebra", "percentage", "fraction"];
+    const type =
+      questionTypes[Math.floor(Math.random() * questionTypes.length)];
 
     if (type === "algebra") {
-      const a = Math.floor(Math.random() * 10) + 1
-      const b = Math.floor(Math.random() * 20) + 1
-      const question = `If x + ${a} = ${a + b}, what is x?`
-      const answer = b
-      const allOptions = [answer, answer + 1, answer - 1, answer + 2]
-      const options = allOptions.map((opt, idx) => `${String.fromCharCode(65 + idx)}. ${opt}`)
-      return { id, question, answer, options, difficulty, type: "Algebra" }
+      const a = Math.floor(Math.random() * 10) + 1;
+      const b = Math.floor(Math.random() * 20) + 1;
+      const question = `If x + ${a} = ${a + b}, what is x?`;
+      const answer = b;
+      const allOptions = [answer, answer + 1, answer - 1, answer + 2];
+      const options = allOptions.map(
+        (opt, idx) => `${String.fromCharCode(65 + idx)}. ${opt}`
+      );
+      return { id, question, answer, options, difficulty, type: "Algebra" };
     }
 
     if (type === "percentage") {
-      const base = [20, 25, 50, 100, 200][Math.floor(Math.random() * 5)]
-      const percent = [10, 15, 20, 25, 30][Math.floor(Math.random() * 5)]
-      const question = `What is ${percent}% of ${base}?`
-      const answer = (percent * base) / 100
-      const allOptions = [answer, answer + 5, answer - 5, answer + 10]
-      const options = allOptions.map((opt, idx) => `${String.fromCharCode(65 + idx)}. ${opt}`)
-      return { id, question, answer, options, difficulty, type: "Percentage" }
+      const base = [20, 25, 50, 100, 200][Math.floor(Math.random() * 5)];
+      const percent = [10, 15, 20, 25, 30][Math.floor(Math.random() * 5)];
+      const question = `What is ${percent}% of ${base}?`;
+      const answer = (percent * base) / 100;
+      const allOptions = [answer, answer + 5, answer - 5, answer + 10];
+      const options = allOptions.map(
+        (opt, idx) => `${String.fromCharCode(65 + idx)}. ${opt}`
+      );
+      return { id, question, answer, options, difficulty, type: "Percentage" };
     }
 
     // fraction
-    const num = Math.floor(Math.random() * 5) + 1
-    const den = Math.floor(Math.random() * 5) + 2
-    const whole = Math.floor(Math.random() * 3) + 1
-    const question = `What is ${num}/${den} + ${whole}? (as decimal)`
-    const answer = Math.round((num / den + whole) * 100) / 100
-    const allOptions = [answer, answer + 0.5, answer - 0.5, answer + 1]
-    const options = allOptions.map((opt, idx) => `${String.fromCharCode(65 + idx)}. ${opt}`)
-    return { id, question, answer, options, difficulty, type: "Fractions" }
+    const num = Math.floor(Math.random() * 5) + 1;
+    const den = Math.floor(Math.random() * 5) + 2;
+    const whole = Math.floor(Math.random() * 3) + 1;
+    const question = `What is ${num}/${den} + ${whole}? (as decimal)`;
+    const answer = Math.round((num / den + whole) * 100) / 100;
+    const allOptions = [answer, answer + 0.5, answer - 0.5, answer + 1];
+    const options = allOptions.map(
+      (opt, idx) => `${String.fromCharCode(65 + idx)}. ${opt}`
+    );
+    return { id, question, answer, options, difficulty, type: "Fractions" };
   }
 
   // Hard
-  const a = Math.floor(Math.random() * 15) + 5
-  const b = Math.floor(Math.random() * 15) + 5
-  const question = `What is ${a}² - ${b}²?`
-  const answer = a * a - b * b
-  const allOptions = [answer, answer + 10, answer - 10, answer + 20]
-  const options = allOptions.map((opt, idx) => `${String.fromCharCode(65 + idx)}. ${opt}`)
-  return { id, question, answer, options, difficulty, type: "Squares" }
-}
+  const a = Math.floor(Math.random() * 15) + 5;
+  const b = Math.floor(Math.random() * 15) + 5;
+  const question = `What is ${a}² - ${b}²?`;
+  const answer = a * a - b * b;
+  const allOptions = [answer, answer + 10, answer - 10, answer + 20];
+  const options = allOptions.map(
+    (opt, idx) => `${String.fromCharCode(65 + idx)}. ${opt}`
+  );
+  return { id, question, answer, options, difficulty, type: "Squares" };
+};
 
 export default function MathChampionGame() {
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [questions, setQuestions] = useState<MathQuestion[]>([])
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
-  const [score, setScore] = useState(0)
-  const [timeLeft, setTimeLeft] = useState(45)
-  const [gameStarted, setGameStarted] = useState(false)
-  const [gameEnded, setGameEnded] = useState(false)
-  const [streak, setStreak] = useState(0)
-  const [maxStreak, setMaxStreak] = useState(0)
-  const [difficulty, setDifficulty] = useState<"Easy" | "Medium" | "Hard">("Easy")
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [questions, setQuestions] = useState<MathQuestion[]>([]);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(45);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameEnded, setGameEnded] = useState(false);
+  const [streak, setStreak] = useState(0);
+  const [maxStreak, setMaxStreak] = useState(0);
+  const [difficulty, setDifficulty] = useState<"Easy" | "Medium" | "Hard">(
+    "Easy"
+  );
 
   useEffect(() => {
     if (gameStarted && questions.length === 0) {
       const newQuestions = Array.from({ length: 15 }, (_, i) => {
-        const diff = i < 5 ? "Easy" : i < 10 ? "Medium" : "Hard"
-        return generateMathQuestion(diff)
-      })
-      setQuestions(newQuestions)
+        const diff = i < 5 ? "Easy" : i < 10 ? "Medium" : "Hard";
+        return generateMathQuestion(diff);
+      });
+      setQuestions(newQuestions);
     }
-  }, [gameStarted])
+  }, [gameStarted]);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout
+    let timer: NodeJS.Timeout;
     if (gameStarted && !gameEnded && timeLeft > 0) {
-      timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
+      timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
     } else if (timeLeft === 0 && gameStarted) {
-      handleNextQuestion()
+      handleNextQuestion();
     }
-    return () => clearTimeout(timer)
-  }, [timeLeft, gameStarted, gameEnded])
+    return () => clearTimeout(timer);
+  }, [timeLeft, gameStarted, gameEnded]);
 
   const startGame = (selectedDifficulty: "Easy" | "Medium" | "Hard") => {
-    setDifficulty(selectedDifficulty)
-    setGameStarted(true)
-    setCurrentQuestion(0)
-    setScore(0)
-    setStreak(0)
-    setMaxStreak(0)
-    setTimeLeft(45)
-    setGameEnded(false)
-    setQuestions([])
-  }
+    setDifficulty(selectedDifficulty);
+    setGameStarted(true);
+    setCurrentQuestion(0);
+    setScore(0);
+    setStreak(0);
+    setMaxStreak(0);
+    setTimeLeft(45);
+    setGameEnded(false);
+    setQuestions([]);
+  };
 
   const handleAnswerSelect = (optionIndex: number) => {
-    setSelectedAnswer(optionIndex)
-  }
+    setSelectedAnswer(optionIndex);
+  };
 
   const handleNextQuestion = () => {
-    const isCorrect = selectedAnswer === 0 // Since correct answer is always at index 0 after we format options
+    const isCorrect = selectedAnswer === 0; // Since correct answer is always at index 0 after we format options
 
     if (isCorrect) {
-      const timeBonus = Math.floor(timeLeft / 5)
-      const difficultyMultiplier = difficulty === "Easy" ? 1 : difficulty === "Medium" ? 1.5 : 2
-      const streakBonus = streak >= 3 ? 5 : 0
-      const points = Math.floor((15 + timeBonus + streakBonus) * difficultyMultiplier)
+      const timeBonus = Math.floor(timeLeft / 5);
+      const difficultyMultiplier =
+        difficulty === "Easy" ? 1 : difficulty === "Medium" ? 1.5 : 2;
+      const streakBonus = streak >= 3 ? 5 : 0;
+      const points = Math.floor(
+        (15 + timeBonus + streakBonus) * difficultyMultiplier
+      );
 
-      setScore(score + points)
-      setStreak(streak + 1)
-      setMaxStreak(Math.max(maxStreak, streak + 1))
+      setScore(score + points);
+      setStreak(streak + 1);
+      setMaxStreak(Math.max(maxStreak, streak + 1));
     } else {
-      setStreak(0)
+      setStreak(0);
     }
 
     if (currentQuestion + 1 < questions.length) {
-      setCurrentQuestion(currentQuestion + 1)
-      setSelectedAnswer(null)
-      setTimeLeft(45)
+      setCurrentQuestion(currentQuestion + 1);
+      setSelectedAnswer(null);
+      setTimeLeft(45);
     } else {
-      setGameEnded(true)
-      saveGameResult()
+      setGameEnded(true);
+      saveGameResult();
     }
-  }
+  };
 
   const saveGameResult = () => {
     const gameData = {
@@ -185,47 +210,50 @@ export default function MathChampionGame() {
       difficulty,
       maxStreak,
       questionsAnswered: questions.length,
-    }
+    };
 
-    const existingData = localStorage.getItem("mathChampionResults") || "[]"
-    const results = JSON.parse(existingData)
-    results.push(gameData)
-    localStorage.setItem("mathChampionResults", JSON.stringify(results))
+    const existingData = localStorage.getItem("mathChampionResults") || "[]";
+    const results = JSON.parse(existingData);
+    results.push(gameData);
+    localStorage.setItem("mathChampionResults", JSON.stringify(results));
 
     // Update leaderboard
-    const leaderboardData = localStorage.getItem("gameLeaderboard") || "[]"
-    const leaderboard = JSON.parse(leaderboardData)
+    const leaderboardData = localStorage.getItem("gameLeaderboard") || "[]";
+    const leaderboard = JSON.parse(leaderboardData);
     leaderboard.push({
       name: "You",
       score,
       game: "Math Champion",
       date: new Date().toISOString(),
-    })
-    leaderboard.sort((a: any, b: any) => b.score - a.score)
-    localStorage.setItem("gameLeaderboard", JSON.stringify(leaderboard.slice(0, 10)))
-  }
+    });
+    leaderboard.sort((a: any, b: any) => b.score - a.score);
+    localStorage.setItem(
+      "gameLeaderboard",
+      JSON.stringify(leaderboard.slice(0, 10))
+    );
+  };
 
   const resetGame = () => {
-    setCurrentQuestion(0)
-    setSelectedAnswer(null)
-    setScore(0)
-    setTimeLeft(45)
-    setGameStarted(false)
-    setGameEnded(false)
-    setQuestions([])
-    setStreak(0)
-    setMaxStreak(0)
-  }
+    setCurrentQuestion(0);
+    setSelectedAnswer(null);
+    setScore(0);
+    setTimeLeft(45);
+    setGameStarted(false);
+    setGameEnded(false);
+    setQuestions([]);
+    setStreak(0);
+    setMaxStreak(0);
+  };
 
   if (!gameStarted) {
     return (
       <div className="min-h-screen bg-gray-50">
         <header className="border-b bg-white sticky top-0 z-50">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
+            {/* <Link href="/" className="flex items-center gap-2">
               <BookOpen className="h-8 w-8 text-blue-600" />
               <span className="text-2xl font-bold text-gray-900">EduNaija</span>
-            </Link>
+            </Link> */}
             <Link href="/games">
               <Button variant="outline">Back to Games</Button>
             </Link>
@@ -236,39 +264,57 @@ export default function MathChampionGame() {
           <div className="max-w-2xl mx-auto text-center">
             <div className="mb-8">
               <Calculator className="w-16 h-16 text-blue-500 mx-auto mb-4" />
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">Math Champion</h1>
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                Math Champion
+              </h1>
               <p className="text-xl text-gray-600 mb-8">
-                Solve mathematical problems quickly and accurately. Build streaks for bonus points!
+                Solve mathematical problems quickly and accurately. Build
+                streaks for bonus points!
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-4 mb-8">
-              <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => startGame("Easy")}>
+              <Card
+                className="cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => startGame("Easy")}
+              >
                 <CardHeader>
                   <CardTitle className="text-green-600">Easy Mode</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-gray-600 mb-4">Basic arithmetic operations</p>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Basic arithmetic operations
+                  </p>
                   <Badge variant="secondary">1x Points</Badge>
                 </CardContent>
               </Card>
 
-              <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => startGame("Medium")}>
+              <Card
+                className="cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => startGame("Medium")}
+              >
                 <CardHeader>
                   <CardTitle className="text-blue-600">Medium Mode</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-gray-600 mb-4">Algebra, percentages, fractions</p>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Algebra, percentages, fractions
+                  </p>
                   <Badge className="bg-blue-600">1.5x Points</Badge>
                 </CardContent>
               </Card>
 
-              <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => startGame("Hard")}>
+              <Card
+                className="cursor-pointer hover:shadow-lg transition-shadow"
+                onClick={() => startGame("Hard")}
+              >
                 <CardHeader>
                   <CardTitle className="text-red-600">Hard Mode</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-gray-600 mb-4">Advanced mathematics</p>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Advanced mathematics
+                  </p>
                   <Badge variant="destructive">2x Points</Badge>
                 </CardContent>
               </Card>
@@ -288,7 +334,7 @@ export default function MathChampionGame() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (gameEnded) {
@@ -296,10 +342,10 @@ export default function MathChampionGame() {
       <div className="min-h-screen bg-gray-50">
         <header className="border-b bg-white sticky top-0 z-50">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
+            {/* <Link href="/" className="flex items-center gap-2">
               <BookOpen className="h-8 w-8 text-blue-600" />
               <span className="text-2xl font-bold text-gray-900">EduNaija</span>
-            </Link>
+            </Link> */}
             <Link href="/games">
               <Button variant="outline">Back to Games</Button>
             </Link>
@@ -309,33 +355,51 @@ export default function MathChampionGame() {
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-2xl mx-auto text-center">
             <Calculator className="w-16 h-16 text-blue-500 mx-auto mb-4" />
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Math Challenge Complete!</h1>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              Math Challenge Complete!
+            </h1>
 
             <Card className="mb-8">
               <CardContent className="pt-6">
-                <div className="text-6xl font-bold text-blue-600 mb-4">{score}</div>
+                <div className="text-6xl font-bold text-blue-600 mb-4">
+                  {score}
+                </div>
                 <div className="text-xl text-gray-600 mb-6">Final Score</div>
 
                 <div className="grid grid-cols-3 gap-4 mb-6">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-purple-600">{difficulty}</div>
+                    <div className="text-2xl font-bold text-purple-600">
+                      {difficulty}
+                    </div>
                     <div className="text-sm text-gray-600">Difficulty</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-orange-600">{maxStreak}</div>
+                    <div className="text-2xl font-bold text-orange-600">
+                      {maxStreak}
+                    </div>
                     <div className="text-sm text-gray-600">Best Streak</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">{questions.length}</div>
+                    <div className="text-2xl font-bold text-green-600">
+                      {questions.length}
+                    </div>
                     <div className="text-sm text-gray-600">Questions</div>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  {score >= 300 && <Badge className="bg-green-500">Math Genius!</Badge>}
-                  {score >= 200 && score < 300 && <Badge className="bg-blue-500">Great Performance!</Badge>}
-                  {score >= 100 && score < 200 && <Badge className="bg-yellow-500">Good Job!</Badge>}
-                  {score < 100 && <Badge variant="secondary">Keep Practicing!</Badge>}
+                  {score >= 300 && (
+                    <Badge className="bg-green-500">Math Genius!</Badge>
+                  )}
+                  {score >= 200 && score < 300 && (
+                    <Badge className="bg-blue-500">Great Performance!</Badge>
+                  )}
+                  {score >= 100 && score < 200 && (
+                    <Badge className="bg-yellow-500">Good Job!</Badge>
+                  )}
+                  {score < 100 && (
+                    <Badge variant="secondary">Keep Practicing!</Badge>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -354,7 +418,7 @@ export default function MathChampionGame() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (questions.length === 0) {
@@ -365,23 +429,25 @@ export default function MathChampionGame() {
           <p>Generating questions...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="border-b bg-white sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
+          {/* <Link href="/" className="flex items-center gap-2">
             <BookOpen className="h-8 w-8 text-blue-600" />
             <span className="text-2xl font-bold text-gray-900">EduNaija</span>
-          </Link>
-          <div className="flex items-center gap-4">
+          </Link> */}
+          <div className="flex items-center gap-4 w-full justify-between">
             <div className="flex items-center gap-2">
               <Trophy className="w-5 h-5 text-yellow-500" />
               <span className="font-bold">{score}</span>
             </div>
-            {streak > 0 && <Badge className="bg-orange-500">🔥 {streak} streak</Badge>}
+            {streak > 0 && (
+              <Badge className="bg-orange-500">🔥 {streak} streak</Badge>
+            )}
             <Link href="/games">
               <Button variant="outline">Exit Game</Button>
             </Link>
@@ -399,9 +465,17 @@ export default function MathChampionGame() {
                   Question {currentQuestion + 1} of {questions.length}
                 </h1>
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline">{questions[currentQuestion].type}</Badge>
+                  <Badge variant="outline">
+                    {questions[currentQuestion].type}
+                  </Badge>
                   <Badge
-                    variant={difficulty === "Easy" ? "secondary" : difficulty === "Medium" ? "default" : "destructive"}
+                    variant={
+                      difficulty === "Easy"
+                        ? "secondary"
+                        : difficulty === "Medium"
+                        ? "default"
+                        : "destructive"
+                    }
                   >
                     {difficulty}
                   </Badge>
@@ -410,19 +484,28 @@ export default function MathChampionGame() {
               <div className="text-right">
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="w-5 h-5 text-red-500" />
-                  <span className={`text-2xl font-bold ${timeLeft <= 15 ? "text-red-500" : "text-gray-900"}`}>
+                  <span
+                    className={`text-2xl font-bold ${
+                      timeLeft <= 15 ? "text-red-500" : "text-gray-900"
+                    }`}
+                  >
                     {timeLeft}s
                   </span>
                 </div>
               </div>
             </div>
-            <Progress value={(currentQuestion / questions.length) * 100} className="mb-4" />
+            <Progress
+              value={(currentQuestion / questions.length) * 100}
+              className="mb-4"
+            />
           </div>
 
           {/* Question */}
           <Card className="mb-8">
             <CardHeader>
-              <CardTitle className="text-2xl text-center font-mono">{questions[currentQuestion].question}</CardTitle>
+              <CardTitle className="text-2xl text-center font-mono">
+                {questions[currentQuestion].question}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
@@ -430,7 +513,11 @@ export default function MathChampionGame() {
                   <Button
                     key={index}
                     variant={selectedAnswer === index ? "default" : "outline"}
-                    className={`p-6 h-auto text-xl font-mono ${selectedAnswer === index ? "bg-blue-600" : "bg-transparent"}`}
+                    className={`p-6 h-auto text-xl font-mono ${
+                      selectedAnswer === index
+                        ? "bg-blue-600"
+                        : "bg-transparent"
+                    }`}
                     onClick={() => handleAnswerSelect(index)}
                   >
                     {option}
@@ -442,13 +529,19 @@ export default function MathChampionGame() {
 
           {/* Next Button */}
           <div className="text-center">
-            <Button onClick={handleNextQuestion} disabled={selectedAnswer === null} size="lg">
-              {currentQuestion + 1 === questions.length ? "Finish Challenge" : "Next Question"}
+            <Button
+              onClick={handleNextQuestion}
+              disabled={selectedAnswer === null}
+              size="lg"
+            >
+              {currentQuestion + 1 === questions.length
+                ? "Finish Challenge"
+                : "Next Question"}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
