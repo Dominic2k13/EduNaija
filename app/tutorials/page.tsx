@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { BookOpen, Play, Search, Star } from "lucide-react"
-import Link from "next/link"
-import { useState } from "react"
-import Image from "next/image"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { BookOpen, Play, Search, Star } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import Image from "next/image";
 
 export default function TutorialsPage() {
-  const [selectedVideo, setSelectedVideo] = useState<any>(null)
-  const [showVideoPlayer, setShowVideoPlayer] = useState(false)
+  const [selectedVideo, setSelectedVideo] = useState<any>(null);
+  const [showVideoPlayer, setShowVideoPlayer] = useState(false);
 
   const subjects = [
     { name: "Mathematics", videos: 150, color: "bg-blue-500" },
@@ -20,7 +20,7 @@ export default function TutorialsPage() {
     { name: "Chemistry", videos: 95, color: "bg-red-500" },
     { name: "Biology", videos: 85, color: "bg-yellow-500" },
     { name: "Economics", videos: 70, color: "bg-indigo-500" },
-  ]
+  ];
 
   const featuredVideos = [
     {
@@ -55,7 +55,7 @@ export default function TutorialsPage() {
       thumbnail: "/placeholder.svg?height=200&width=300",
       subject: "Chemistry",
     },
-  ]
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -78,12 +78,15 @@ export default function TutorialsPage() {
             <Link href="/tutorials" className="text-blue-600 font-medium">
               Tutorials
             </Link>
-            <Link href="/cbt" className="text-gray-600 hover:text-blue-600 transition-colors">
+            <Link
+              href="/cbt"
+              className="text-gray-600 hover:text-blue-600 transition-colors"
+            >
               CBT Practice
             </Link>
-            <Link href="/games" className="text-gray-600 hover:text-blue-600 transition-colors">
+            {/* <Link href="/games" className="text-gray-600 hover:text-blue-600 transition-colors">
               Games
-            </Link>
+            </Link> */}
             <Link href="/login">
               <Button variant="outline">Login</Button>
             </Link>
@@ -94,9 +97,12 @@ export default function TutorialsPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Video Tutorials</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            Video Tutorials
+          </h1>
           <p className="text-gray-600 mb-6">
-            Master every subject with our comprehensive video library taught by expert instructors.
+            Master every subject with our comprehensive video library taught by
+            expert instructors.
           </p>
 
           {/* Search Bar */}
@@ -111,7 +117,10 @@ export default function TutorialsPage() {
           <h2 className="text-2xl font-semibold mb-6">Browse by Subject</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {subjects.map((subject) => (
-              <Card key={subject.name} className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card
+                key={subject.name}
+                className="hover:shadow-md transition-shadow cursor-pointer"
+              >
                 <CardContent className="p-4 text-center">
                   <div
                     className={`w-12 h-12 ${subject.color} rounded-full mx-auto mb-3 flex items-center justify-center`}
@@ -119,7 +128,9 @@ export default function TutorialsPage() {
                     <BookOpen className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="font-medium text-sm mb-1">{subject.name}</h3>
-                  <p className="text-xs text-gray-500">{subject.videos} videos</p>
+                  <p className="text-xs text-gray-500">
+                    {subject.videos} videos
+                  </p>
                 </CardContent>
               </Card>
             ))}
@@ -131,7 +142,10 @@ export default function TutorialsPage() {
           <h2 className="text-2xl font-semibold mb-6">Featured Tutorials</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredVideos.map((video, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow cursor-pointer">
+              <Card
+                key={index}
+                className="hover:shadow-lg transition-shadow cursor-pointer"
+              >
                 <div className="relative">
                   <img
                     src={video.thumbnail || "/placeholder.svg"}
@@ -141,13 +155,17 @@ export default function TutorialsPage() {
                   <div className="absolute inset-0 bg-black/20 rounded-t-lg flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
                     <Play className="w-12 h-12 text-white" />
                   </div>
-                  <Badge className="absolute top-2 right-2 bg-black/70 text-white">{video.duration}</Badge>
+                  <Badge className="absolute top-2 right-2 bg-black/70 text-white">
+                    {video.duration}
+                  </Badge>
                 </div>
                 <CardHeader className="pb-2">
                   <Badge variant="secondary" className="w-fit mb-2">
                     {video.subject}
                   </Badge>
-                  <CardTitle className="text-sm line-clamp-2">{video.title}</CardTitle>
+                  <CardTitle className="text-sm line-clamp-2">
+                    {video.title}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
                   <div className="flex items-center justify-between text-sm text-gray-500">
@@ -164,5 +182,5 @@ export default function TutorialsPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

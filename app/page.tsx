@@ -1,14 +1,48 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { BookOpen, Brain, GamepadIcon, Play, Trophy, Users, Menu, X } from "lucide-react"
-import Link from "next/link"
-import Image from "next/image"
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  BookOpen,
+  Brain,
+  GamepadIcon,
+  Play,
+  Trophy,
+  Users,
+  Menu,
+  X,
+  Bot,
+  User,
+} from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function HomePage() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter();
+  const [username, setUsername] = useState<string | null>(null);
+
+  useEffect(() => {
+    // runs only in the browser
+    const stored = localStorage.getItem("username");
+    setUsername(stored);
+  }, []);
+
+  function onHandleGameClick() {
+    if (username) {
+      router.push("/games");
+    } else {
+      router.push("/login");
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
@@ -44,33 +78,45 @@ export default function HomePage() {
               CBT Practice
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link
-              href="/games"
+            <button
+              // href="/games"
               className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium relative group"
+              onClick={onHandleGameClick}
             >
               Games
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-            </Link>
-            <Link
+            </button>
+            {/* <Link
               href="/leaderboard"
               className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium relative group"
             >
               Leaderboard
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-            </Link>
-            <Link href="/login">
-              <Button
-                variant="outline"
-                className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-105 bg-transparent"
+            </Link> */}
+            {username ? (
+              <button
+                className="p-2 rounded-full hover:bg-blue-100 transition-colors"
+                onClick={() => router.push("/dashboard")}
               >
-                Login
-              </Button>
-            </Link>
-            <Link href="/signup">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-                Sign Up
-              </Button>
-            </Link>
+                <User className="w-7 h-7 text-blue-600" />
+              </button>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button
+                    variant="outline"
+                    className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-105 bg-transparent"
+                  >
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/signup">
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
+            )}
           </nav>
 
           {/* Mobile Menu Button */}
@@ -78,7 +124,11 @@ export default function HomePage() {
             className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-300"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
 
@@ -100,13 +150,13 @@ export default function HomePage() {
               >
                 CBT Practice
               </Link>
-              <Link
+              {/* <Link
                 href="/games"
                 className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium py-2 px-4 rounded-lg hover:bg-blue-50"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Games
-              </Link>
+              </Link> */}
               <Link
                 href="/leaderboard"
                 className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium py-2 px-4 rounded-lg hover:bg-blue-50"
@@ -124,7 +174,9 @@ export default function HomePage() {
                   </Button>
                 </Link>
                 <Link href="/signup" onClick={() => setIsMenuOpen(false)}>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Sign Up</Button>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                    Sign Up
+                  </Button>
                 </Link>
               </div>
             </nav>
@@ -154,8 +206,8 @@ export default function HomePage() {
             <span className="text-orange-400 block">With Confidence</span>
           </h1>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto drop-shadow-md">
-            Access comprehensive tutorial videos, practice CBT exams, and play gamified quizzes to excel in your
-            Nigerian educational examinations.
+            Access comprehensive tutorial videos, practice CBT exams, and play
+            gamified quizzes to excel in your Nigerian educational examinations.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/signup">
@@ -183,7 +235,9 @@ export default function HomePage() {
       {/* Features Section */}
       <section className="py-16 px-4 bg-white">
         <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">Everything You Need to Succeed</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
+            Everything You Need to Succeed
+          </h2>
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="text-center hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 group border-l-4 border-l-blue-600">
               <CardHeader>
@@ -191,7 +245,10 @@ export default function HomePage() {
                   <Play className="w-8 h-8 text-blue-600 group-hover:text-white transition-all duration-300" />
                 </div>
                 <CardTitle className="text-gray-900">Video Tutorials</CardTitle>
-                <CardDescription>Expert-led video lessons covering all JAMB, SSCE, and PTUME subjects</CardDescription>
+                <CardDescription>
+                  Expert-led video lessons covering all JAMB, SSCE, and PTUME
+                  subjects
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <Link href="/tutorials">
@@ -211,7 +268,10 @@ export default function HomePage() {
                   <Brain className="w-8 h-8 text-red-600 group-hover:text-white transition-all duration-300" />
                 </div>
                 <CardTitle className="text-gray-900">CBT Practice</CardTitle>
-                <CardDescription>Realistic computer-based test simulations with instant feedback</CardDescription>
+                <CardDescription>
+                  Realistic computer-based test simulations with instant
+                  feedback
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <Link href="/cbt">
@@ -231,7 +291,10 @@ export default function HomePage() {
                   <GamepadIcon className="w-8 h-8 text-orange-500 group-hover:text-white transition-all duration-300" />
                 </div>
                 <CardTitle className="text-gray-900">Quiz Games</CardTitle>
-                <CardDescription>Gamified learning experience with leaderboards and achievements</CardDescription>
+                <CardDescription>
+                  Gamified learning experience with leaderboards and
+                  achievements
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <Link href="/games">
@@ -242,6 +305,84 @@ export default function HomePage() {
                     Play Games
                   </Button>
                 </Link>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mt-6">
+            <Card className="text-center hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 group border-l-4 border-l-indigo-600">
+              <CardHeader>
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-indigo-600 transition-all duration-300">
+                  {/* <Play className="w-8 h-8 text-blue-600 group-hover:text-white transition-all duration-300" />
+                   */}
+                  <Bot className="bg-indigo-100 text-indigo-600 border-l-indigo-600 group-hover:text-white" />
+                </div>
+                <CardTitle className="text-gray-900">AI Tutor</CardTitle>
+                <CardDescription>
+                  Personalized AI-powered guidance and instant answers to your
+                  study questions.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {/* <Link href="/tutorials"> */}
+                <Button
+                  variant="outline"
+                  className="w-full border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all duration-300 transform hover:scale-105 bg-transparent"
+                >
+                  Coming Soon
+                </Button>
+                {/* </Link> */}
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 group border-l-4 border-l-emerald-600">
+              <CardHeader>
+                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-emerald-600 transition-all duration-300">
+                  {/* <Brain className="w-8 h-8 text-red-600 group-hover:text-white transition-all duration-300" /> */}
+                  <Users className=" text-emerald-600  group-hover:text-white" />
+                </div>
+                <CardTitle className="text-gray-900"> Study Group</CardTitle>
+                <CardDescription>
+                  {" "}
+                  Join or create study groups to learn and collaborate with
+                  peers.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {/* <Link href="/cbt"> */}
+                <Button
+                  variant="outline"
+                  className="w-full border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white transition-all duration-300 transform hover:scale-105 bg-transparent"
+                >
+                  Coming Soon
+                </Button>
+                {/* </Link> */}
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 group border-l-4 border-l-amber-500">
+              <CardHeader>
+                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-500 transition-all duration-300">
+                  {/* <GamepadIcon className="w-8 h-8 text-orange-500 group-hover:text-white transition-all duration-300" /> */}
+                  <Trophy className="w-8 h-8 text-orange-500 group-hover:text-white transition-all duration-300" />
+                </div>
+                <CardTitle className="text-gray-900">
+                  Gamified learning
+                </CardTitle>
+                <CardDescription>
+                  Earn badges, climb leaderboards, and unlock achievements as
+                  you learn.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {/* <Link href="/games"> */}
+                <Button
+                  variant="outline"
+                  className="w-full border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-300 transform hover:scale-105 bg-transparent"
+                >
+                  Coming Soon
+                </Button>
+                {/* </Link> */}
               </CardContent>
             </Card>
           </div>
@@ -280,9 +421,12 @@ export default function HomePage() {
       {/* CTA Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-6 text-gray-900">Ready to Excel in Your Exams?</h2>
+          <h2 className="text-3xl font-bold mb-6 text-gray-900">
+            Ready to Excel in Your Exams?
+          </h2>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Join thousands of students who have improved their scores with our comprehensive learning platform.
+            Join thousands of students who have improved their scores with our
+            comprehensive learning platform.
           </p>
           <Link href="/signup">
             <Button
@@ -313,7 +457,8 @@ export default function HomePage() {
                 <span className="text-xl font-bold">HighScore</span>
               </div>
               <p className="text-gray-400">
-                Empowering Nigerian students to excel in JAMB, SSCE, and PTUME examinations.
+                Empowering Nigerian students to excel in JAMB, SSCE, and PTUME
+                examinations.
               </p>
             </div>
             <div>
@@ -325,7 +470,10 @@ export default function HomePage() {
                 >
                   Video Tutorials
                 </Link>
-                <Link href="/cbt" className="block text-gray-400 hover:text-red-400 transition-colors duration-300">
+                <Link
+                  href="/cbt"
+                  className="block text-gray-400 hover:text-red-400 transition-colors duration-300"
+                >
                   CBT Practice
                 </Link>
                 <Link
@@ -360,5 +508,5 @@ export default function HomePage() {
         </div>
       </footer>
     </div>
-  )
+  );
 }
