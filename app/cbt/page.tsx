@@ -1,9 +1,15 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Clock, FileText, Target, TrendingUp } from "lucide-react"
-import Link from "next/link"
-import Image from "next/image"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Clock, FileText, Target, TrendingUp } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function CBTPage() {
   const examTypes = [
@@ -39,13 +45,13 @@ export default function CBTPage() {
       questions: 100,
       color: "border-orange-500",
     },
-  ]
+  ];
 
   const recentScores = [
     { exam: "JAMB Mathematics", score: 85, date: "2 days ago" },
     { exam: "Physics Practice", score: 78, date: "1 week ago" },
     { exam: "English Language", score: 92, date: "1 week ago" },
-  ]
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -65,15 +71,18 @@ export default function CBTPage() {
             <span className="text-2xl font-bold text-blue-900">HighScore</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="/tutorials" className="text-gray-600 hover:text-blue-600 transition-colors">
+            <Link
+              href="/tutorials"
+              className="text-gray-600 hover:text-blue-600 transition-colors"
+            >
               Tutorials
             </Link>
             <Link href="/cbt" className="text-blue-600 font-medium">
               CBT Practice
             </Link>
-            <Link href="/games" className="text-gray-600 hover:text-blue-600 transition-colors">
+            {/* <Link href="/games" className="text-gray-600 hover:text-blue-600 transition-colors">
               Games
-            </Link>
+            </Link> */}
             <Link href="/login">
               <Button variant="outline">Login</Button>
             </Link>
@@ -84,9 +93,12 @@ export default function CBTPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">CBT Practice Tests</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            CBT Practice Tests
+          </h1>
           <p className="text-gray-600 mb-6">
-            Practice with realistic computer-based test simulations. Get instant feedback and track your progress.
+            Practice with realistic computer-based test simulations. Get instant
+            feedback and track your progress.
           </p>
         </div>
 
@@ -95,15 +107,24 @@ export default function CBTPage() {
           <div className="lg:col-span-2">
             {/* Exam Types */}
             <div className="mb-8">
-              <h2 className="text-2xl font-semibold mb-6">Choose Your Exam Type</h2>
+              <h2 className="text-2xl font-semibold mb-6">
+                Choose Your Exam Type
+              </h2>
               <div className="grid gap-6">
                 {examTypes.map((exam, index) => (
-                  <Card key={index} className={`border-l-4 ${exam.color} hover:shadow-lg transition-shadow`}>
+                  <Card
+                    key={index}
+                    className={`border-l-4 ${exam.color} hover:shadow-lg transition-shadow`}
+                  >
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div>
-                          <CardTitle className="text-xl mb-2">{exam.title}</CardTitle>
-                          <CardDescription className="text-base">{exam.description}</CardDescription>
+                          <CardTitle className="text-xl mb-2">
+                            {exam.title}
+                          </CardTitle>
+                          <CardDescription className="text-base">
+                            {exam.description}
+                          </CardDescription>
                         </div>
                         <Badge variant="outline" className="ml-4">
                           {exam.questions} Questions
@@ -129,7 +150,11 @@ export default function CBTPage() {
                             <span>{exam.questions} questions</span>
                           </div>
                         </div>
-                        <Link href={`/cbt/${exam.title.toLowerCase().replace(/\s+/g, "-")}`}>
+                        <Link
+                          href={`/cbt/${exam.title
+                            .toLowerCase()
+                            .replace(/\s+/g, "-")}`}
+                        >
                           <Button>Start Practice</Button>
                         </Link>
                       </div>
@@ -178,12 +203,23 @@ export default function CBTPage() {
               </CardHeader>
               <CardContent className="space-y-3">
                 {recentScores.map((score, index) => (
-                  <div key={index} className="flex items-center justify-between">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between"
+                  >
                     <div>
                       <div className="font-medium text-sm">{score.exam}</div>
                       <div className="text-xs text-gray-500">{score.date}</div>
                     </div>
-                    <Badge variant={score.score >= 80 ? "default" : score.score >= 60 ? "secondary" : "destructive"}>
+                    <Badge
+                      variant={
+                        score.score >= 80
+                          ? "default"
+                          : score.score >= 60
+                          ? "secondary"
+                          : "destructive"
+                      }
+                    >
                       {score.score}%
                     </Badge>
                   </div>
@@ -197,15 +233,24 @@ export default function CBTPage() {
                 <CardTitle>Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button variant="outline" className="w-full justify-start bg-transparent">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start bg-transparent"
+                >
                   <FileText className="w-4 h-4 mr-2" />
                   View All Results
                 </Button>
-                <Button variant="outline" className="w-full justify-start bg-transparent">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start bg-transparent"
+                >
                   <TrendingUp className="w-4 h-4 mr-2" />
                   Performance Analytics
                 </Button>
-                <Button variant="outline" className="w-full justify-start bg-transparent">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start bg-transparent"
+                >
                   <Target className="w-4 h-4 mr-2" />
                   Set Study Goals
                 </Button>
@@ -215,5 +260,5 @@ export default function CBTPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

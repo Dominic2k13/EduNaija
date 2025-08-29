@@ -1,23 +1,30 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Crown, GamepadIcon, Star, Trophy, Zap } from "lucide-react"
-import Link from "next/link"
-import Leaderboard from "@/components/leaderboard"
-import Image from "next/image"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Crown, GamepadIcon, Star, Trophy, Zap } from "lucide-react";
+import Link from "next/link";
+import Leaderboard from "@/components/leaderboard";
+import Image from "next/image";
 
 export default function GamesPage() {
-  const [selectedGame, setSelectedGame] = useState<string | null>(null)
+  const [selectedGame, setSelectedGame] = useState<string | null>(null);
 
   const games = [
     {
       id: "quiz-master",
       title: "Quiz Master",
-      description: "Answer questions quickly to earn points and climb the leaderboard",
+      description:
+        "Answer questions quickly to earn points and climb the leaderboard",
       difficulty: "Easy",
       players: "1,234",
       category: "General Knowledge",
@@ -53,7 +60,8 @@ export default function GamesPage() {
     {
       id: "word-wizard",
       title: "Word Wizard",
-      description: "Master English language through vocabulary and grammar games",
+      description:
+        "Master English language through vocabulary and grammar games",
       difficulty: "Medium",
       players: "1,089",
       category: "English",
@@ -62,21 +70,37 @@ export default function GamesPage() {
       bgColor: "bg-green-50",
       hoverColor: "hover:bg-green-100",
     },
-  ]
+  ];
 
   const achievements = [
-    { title: "First Victory", description: "Win your first game", unlocked: true },
-    { title: "Speed Demon", description: "Answer 10 questions in under 30 seconds", unlocked: true },
-    { title: "Math Genius", description: "Score 100% in a Math game", unlocked: false },
-    { title: "Streak Master", description: "Maintain a 7-day playing streak", unlocked: false },
-  ]
+    {
+      title: "First Victory",
+      description: "Win your first game",
+      unlocked: true,
+    },
+    {
+      title: "Speed Demon",
+      description: "Answer 10 questions in under 30 seconds",
+      unlocked: true,
+    },
+    {
+      title: "Math Genius",
+      description: "Score 100% in a Math game",
+      unlocked: false,
+    },
+    {
+      title: "Streak Master",
+      description: "Maintain a 7-day playing streak",
+      unlocked: false,
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       {/* Header */}
       <header className="border-b bg-white/90 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/dashboard" className="flex items-center gap-3">
             <div className="w-16 h-16 relative">
               <Image
                 src="/highscore-logo-final.png"
@@ -89,7 +113,7 @@ export default function GamesPage() {
             <span className="text-2xl font-bold text-blue-900">HighScore</span>
           </Link>
           <nav className="hidden md:flex items-center gap-8">
-            <Link
+            {/* <Link
               href="/tutorials"
               className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium relative group"
             >
@@ -114,7 +138,7 @@ export default function GamesPage() {
               >
                 Login
               </Button>
-            </Link>
+            </Link> */}
           </nav>
         </div>
       </header>
@@ -122,9 +146,12 @@ export default function GamesPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Learning Games</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            Learning Games
+          </h1>
           <p className="text-gray-600 mb-6">
-            Make learning fun with our gamified quiz platform. Compete with friends and earn achievements!
+            Make learning fun with our gamified quiz platform. Compete with
+            friends and earn achievements!
           </p>
         </div>
 
@@ -133,7 +160,9 @@ export default function GamesPage() {
           <div className="lg:col-span-2">
             {/* Games Grid */}
             <div className="mb-8">
-              <h2 className="text-2xl font-semibold mb-6 text-gray-900">Choose Your Game</h2>
+              <h2 className="text-2xl font-semibold mb-6 text-gray-900">
+                Choose Your Game
+              </h2>
               <div className="grid md:grid-cols-2 gap-6">
                 {games.map((game) => (
                   <div key={game.id}>
@@ -154,7 +183,10 @@ export default function GamesPage() {
                                 <CardTitle className="text-lg text-gray-900 group-hover:text-gray-800 transition-colors duration-300">
                                   {game.title}
                                 </CardTitle>
-                                <Badge variant="outline" className="mt-1 border-gray-400 text-gray-600">
+                                <Badge
+                                  variant="outline"
+                                  className="mt-1 border-gray-400 text-gray-600"
+                                >
                                   {game.category}
                                 </Badge>
                               </div>
@@ -164,8 +196,8 @@ export default function GamesPage() {
                                 game.difficulty === "Easy"
                                   ? "secondary"
                                   : game.difficulty === "Medium"
-                                    ? "default"
-                                    : "destructive"
+                                  ? "default"
+                                  : "destructive"
                               }
                               className="transform transition-all duration-300 group-hover:scale-105"
                             >
@@ -174,7 +206,9 @@ export default function GamesPage() {
                           </div>
                         </CardHeader>
                         <CardContent className="relative z-10">
-                          <CardDescription className="mb-4 text-gray-600">{game.description}</CardDescription>
+                          <CardDescription className="mb-4 text-gray-600">
+                            {game.description}
+                          </CardDescription>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-1 text-sm text-gray-600">
                               <GamepadIcon className="w-4 h-4" />
@@ -198,19 +232,25 @@ export default function GamesPage() {
             {/* Player Stats */}
             <Card className="hover:shadow-lg transition-all duration-300">
               <CardHeader>
-                <CardTitle className="text-gray-900">Your Gaming Stats</CardTitle>
+                <CardTitle className="text-gray-900">
+                  Your Gaming Stats
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="text-center group cursor-pointer">
                     <div className="transform transition-all duration-300 group-hover:scale-110">
-                      <div className="text-2xl font-bold text-blue-600">1,250</div>
+                      <div className="text-2xl font-bold text-blue-600">
+                        1,250
+                      </div>
                       <div className="text-sm text-gray-600">Total Points</div>
                     </div>
                   </div>
                   <div className="text-center group cursor-pointer">
                     <div className="transform transition-all duration-300 group-hover:scale-110">
-                      <div className="text-2xl font-bold text-green-600">18</div>
+                      <div className="text-2xl font-bold text-green-600">
+                        18
+                      </div>
                       <div className="text-sm text-gray-600">Games Won</div>
                     </div>
                   </div>
@@ -222,7 +262,9 @@ export default function GamesPage() {
                   </div>
                   <div className="text-center group cursor-pointer">
                     <div className="transform transition-all duration-300 group-hover:scale-110">
-                      <div className="text-2xl font-bold text-orange-500">7</div>
+                      <div className="text-2xl font-bold text-orange-500">
+                        7
+                      </div>
                       <div className="text-sm text-gray-600">Day Streak</div>
                     </div>
                   </div>
@@ -260,9 +302,13 @@ export default function GamesPage() {
                           achievement.unlocked ? "bg-green-500" : "bg-gray-400"
                         }`}
                       />
-                      <div className="font-medium text-sm text-gray-900">{achievement.title}</div>
+                      <div className="font-medium text-sm text-gray-900">
+                        {achievement.title}
+                      </div>
                     </div>
-                    <div className="text-xs text-gray-600">{achievement.description}</div>
+                    <div className="text-xs text-gray-600">
+                      {achievement.description}
+                    </div>
                   </div>
                 ))}
               </CardContent>
@@ -278,8 +324,12 @@ export default function GamesPage() {
               </CardHeader>
               <CardContent>
                 <div className="mb-4">
-                  <div className="font-medium mb-2 text-gray-900">Mathematics Sprint</div>
-                  <div className="text-sm text-gray-600 mb-3">Solve 20 math problems in under 5 minutes</div>
+                  <div className="font-medium mb-2 text-gray-900">
+                    Mathematics Sprint
+                  </div>
+                  <div className="text-sm text-gray-600 mb-3">
+                    Solve 20 math problems in under 5 minutes
+                  </div>
                   <Progress value={60} className="mb-2" />
                   <div className="text-xs text-gray-500">12/20 completed</div>
                 </div>
@@ -295,5 +345,8 @@ export default function GamesPage() {
         </div>
       </div>
     </div>
-  )
+  );
+}
+
+{
 }
