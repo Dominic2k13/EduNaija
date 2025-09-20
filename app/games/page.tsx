@@ -1,352 +1,310 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Crown, GamepadIcon, Star, Trophy, Zap } from "lucide-react";
-import Link from "next/link";
-import Leaderboard from "@/components/leaderboard";
-import Image from "next/image";
+  ArrowLeft,
+  BookOpen,
+  Brain,
+  Target,
+  Sparkles,
+  ChevronRight,
+} from "lucide-react";
+import MatchSimulation from "@/components/MatchSimulation";
+import QuestionScreen from "@/components/QuestionScreen";
 
-export default function GamesPage() {
-  const [selectedGame, setSelectedGame] = useState<string | null>(null);
-
-  const games = [
-    {
-      id: "quiz-master",
-      title: "Quiz Master",
-      description:
-        "Answer questions quickly to earn points and climb the leaderboard",
-      difficulty: "Easy",
-      players: "1,234",
-      category: "General Knowledge",
-      icon: <Zap className="w-8 h-8 text-orange-500" />,
-      color: "border-orange-500",
-      bgColor: "bg-orange-50",
-      hoverColor: "hover:bg-orange-100",
-    },
-    {
-      id: "math-champion",
-      title: "Math Champion",
-      description: "Solve mathematical problems in time-based challenges",
-      difficulty: "Medium",
-      players: "856",
-      category: "Mathematics",
-      icon: <Trophy className="w-8 h-8 text-blue-600" />,
-      color: "border-blue-600",
-      bgColor: "bg-blue-50",
-      hoverColor: "hover:bg-blue-100",
-    },
-    {
-      id: "science-explorer",
-      title: "Science Explorer",
-      description: "Explore physics and chemistry through interactive quizzes",
-      difficulty: "Hard",
-      players: "642",
-      category: "Science",
-      icon: <Star className="w-8 h-8 text-red-600" />,
-      color: "border-red-600",
-      bgColor: "bg-red-50",
-      hoverColor: "hover:bg-red-100",
-    },
-    {
-      id: "word-wizard",
-      title: "Word Wizard",
-      description:
-        "Master English language through vocabulary and grammar games",
-      difficulty: "Medium",
-      players: "1,089",
-      category: "English",
-      icon: <Crown className="w-8 h-8 text-green-600" />,
-      color: "border-green-600",
-      bgColor: "bg-green-50",
-      hoverColor: "hover:bg-green-100",
-    },
-  ];
-
-  const achievements = [
-    {
-      title: "First Victory",
-      description: "Win your first game",
-      unlocked: true,
-    },
-    {
-      title: "Speed Demon",
-      description: "Answer 10 questions in under 30 seconds",
-      unlocked: true,
-    },
-    {
-      title: "Math Genius",
-      description: "Score 100% in a Math game",
-      unlocked: false,
-    },
-    {
-      title: "Streak Master",
-      description: "Maintain a 7-day playing streak",
-      unlocked: false,
-    },
-  ];
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      {/* Header */}
-      <header className="border-b bg-white/90 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/dashboard" className="flex items-center gap-3">
-            <div className="w-16 h-16 relative">
-              <Image
-                src="/highscore-logo-final.png"
-                alt="HighScore Logo"
-                width={64}
-                height={64}
-                className="object-contain rounded-lg"
-              />
-            </div>
-            <span className="text-2xl font-bold text-blue-900">HighScore</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-8">
-            {/* <Link
-              href="/tutorials"
-              className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium relative group"
-            >
-              Tutorials
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-            </Link>
-            <Link
-              href="/cbt"
-              className="text-gray-700 hover:text-blue-600 transition-all duration-300 font-medium relative group"
-            >
-              CBT Practice
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
-            </Link>
-            <Link href="/games" className="text-blue-600 font-medium relative">
-              Games
-              <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-blue-600"></span>
-            </Link>
-            <Link href="/login">
-              <Button
-                variant="outline"
-                className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-105 bg-transparent"
-              >
-                Login
-              </Button>
-            </Link> */}
-          </nav>
-        </div>
-      </header>
-
-      <div className="container mx-auto px-4 py-8">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Learning Games
-          </h1>
-          <p className="text-gray-600 mb-6">
-            Make learning fun with our gamified quiz platform. Compete with
-            friends and earn achievements!
-          </p>
-        </div>
-
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2">
-            {/* Games Grid */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-semibold mb-6 text-gray-900">
-                Choose Your Game
-              </h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                {games.map((game) => (
-                  <div key={game.id}>
-                    <Link href={`/games/${game.id}`}>
-                      <Card
-                        className={`border-l-4 ${game.color} ${game.bgColor} hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer group overflow-hidden relative`}
-                      >
-                        <div
-                          className={`absolute inset-0 ${game.hoverColor} opacity-0 group-hover:opacity-100 transition-all duration-300`}
-                        ></div>
-                        <CardHeader className="relative z-10">
-                          <div className="flex items-start justify-between">
-                            <div className="flex items-center gap-3">
-                              <div className="transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
-                                {game.icon}
-                              </div>
-                              <div>
-                                <CardTitle className="text-lg text-gray-900 group-hover:text-gray-800 transition-colors duration-300">
-                                  {game.title}
-                                </CardTitle>
-                                <Badge
-                                  variant="outline"
-                                  className="mt-1 border-gray-400 text-gray-600"
-                                >
-                                  {game.category}
-                                </Badge>
-                              </div>
-                            </div>
-                            <Badge
-                              variant={
-                                game.difficulty === "Easy"
-                                  ? "secondary"
-                                  : game.difficulty === "Medium"
-                                  ? "default"
-                                  : "destructive"
-                              }
-                              className="transform transition-all duration-300 group-hover:scale-105"
-                            >
-                              {game.difficulty}
-                            </Badge>
-                          </div>
-                        </CardHeader>
-                        <CardContent className="relative z-10">
-                          <CardDescription className="mb-4 text-gray-600">
-                            {game.description}
-                          </CardDescription>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-1 text-sm text-gray-600">
-                              <GamepadIcon className="w-4 h-4" />
-                              <span>{game.players} players</span>
-                            </div>
-                            <Button
-                              size="sm"
-                              className="bg-blue-600 hover:bg-blue-700 text-white transform transition-all duration-300 group-hover:scale-105"
-                            >
-                              Play Now
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Player Stats */}
-            <Card className="hover:shadow-lg transition-all duration-300">
-              <CardHeader>
-                <CardTitle className="text-gray-900">
-                  Your Gaming Stats
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center group cursor-pointer">
-                    <div className="transform transition-all duration-300 group-hover:scale-110">
-                      <div className="text-2xl font-bold text-blue-600">
-                        1,250
-                      </div>
-                      <div className="text-sm text-gray-600">Total Points</div>
-                    </div>
-                  </div>
-                  <div className="text-center group cursor-pointer">
-                    <div className="transform transition-all duration-300 group-hover:scale-110">
-                      <div className="text-2xl font-bold text-green-600">
-                        18
-                      </div>
-                      <div className="text-sm text-gray-600">Games Won</div>
-                    </div>
-                  </div>
-                  <div className="text-center group cursor-pointer">
-                    <div className="transform transition-all duration-300 group-hover:scale-110">
-                      <div className="text-2xl font-bold text-red-600">85%</div>
-                      <div className="text-sm text-gray-600">Accuracy</div>
-                    </div>
-                  </div>
-                  <div className="text-center group cursor-pointer">
-                    <div className="transform transition-all duration-300 group-hover:scale-110">
-                      <div className="text-2xl font-bold text-orange-500">
-                        7
-                      </div>
-                      <div className="text-sm text-gray-600">Day Streak</div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Leaderboard */}
-            <Leaderboard showAllGames={false} />
-
-            {/* Achievements */}
-            <Card className="hover:shadow-lg transition-all duration-300">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-gray-900">
-                  <Star className="w-5 h-5 text-orange-500" />
-                  Achievements
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {achievements.map((achievement, index) => (
-                  <div
-                    key={index}
-                    className={`p-3 rounded-lg border transition-all duration-300 hover:shadow-md transform hover:scale-105 cursor-pointer ${
-                      achievement.unlocked
-                        ? "bg-green-50 border-green-200 hover:bg-green-100"
-                        : "bg-gray-50 border-gray-200 hover:bg-gray-100"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <div
-                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                          achievement.unlocked ? "bg-green-500" : "bg-gray-400"
-                        }`}
-                      />
-                      <div className="font-medium text-sm text-gray-900">
-                        {achievement.title}
-                      </div>
-                    </div>
-                    <div className="text-xs text-gray-600">
-                      {achievement.description}
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            {/* Daily Challenge */}
-            <Card className="hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-200">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-gray-900">
-                  <Zap className="w-5 h-5 text-orange-500" />
-                  Daily Challenge
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="mb-4">
-                  <div className="font-medium mb-2 text-gray-900">
-                    Mathematics Sprint
-                  </div>
-                  <div className="text-sm text-gray-600 mb-3">
-                    Solve 20 math problems in under 5 minutes
-                  </div>
-                  <Progress value={60} className="mb-2" />
-                  <div className="text-xs text-gray-500">12/20 completed</div>
-                </div>
-                <Button
-                  className="w-full bg-orange-500 hover:bg-orange-600 text-white transition-all duration-300 transform hover:scale-105"
-                  size="sm"
-                >
-                  Continue Challenge
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+// -----------------
+// User Interface
+// -----------------
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+  displayName: string;
+  rank: string;
+  xp: number;
+  coins: number;
+  avatar: string;
+  totalMatches: number;
+  wins: number;
+  winRate: number;
 }
 
-{
+// Example logged-in user
+const initialUser: User = {
+  id: "1",
+  username: "player1",
+  email: "player@example.com",
+  displayName: "You",
+  rank: "Gold",
+  xp: 1200,
+  coins: 500,
+   avatar: '🎮',
+  totalMatches: 20,
+  wins: 15,
+  winRate: 75,
+};
+
+type Stage = "modes" | "matching" | "questions";
+
+export default function PlayPage() {
+  const router = useRouter();
+  const [stage, setStage] = useState<Stage>("modes");
+  const [gameMode, setGameMode] = useState<string>("");
+  const [subjects, setSubjects] = useState<string[]>([]);
+  const [topics, setTopics] = useState<string[]>([]);
+  const [user, setUser] = useState<User>(initialUser);
+
+  // ---------------------
+  // Game Data
+  // ---------------------
+  const subjectsList = [
+    { name: "Mathematics", icon: "📊", color: "from-blue-600 to-purple-600" },
+    { name: "Physics", icon: "⚡", color: "from-yellow-600 to-orange-600" },
+    { name: "Chemistry", icon: "🧪", color: "from-green-600 to-teal-600" },
+    { name: "Biology", icon: "🧬", color: "from-emerald-600 to-green-600" },
+    { name: "English", icon: "📚", color: "from-pink-600 to-red-600" },
+    { name: "History", icon: "🏛️", color: "from-amber-600 to-yellow-600" },
+  ];
+
+  const topicsMap = {
+    Mathematics: ["Algebra", "Geometry", "Calculus", "Statistics"],
+    Physics: ["Mechanics", "Thermodynamics", "Electricity", "Optics"],
+    Chemistry: ["Organic", "Inorganic", "Physical", "Analytical"],
+    Biology: ["Cell Biology", "Genetics", "Ecology", "Human Anatomy"],
+    English: ["Grammar", "Literature", "Writing", "Comprehension"],
+    History: ["Ancient", "Medieval", "Modern", "Contemporary"],
+  };
+
+  const gameModes = [
+    {
+      id: "subject-combination",
+      title: "Subject Combination",
+      description: "Mix multiple subjects for variety",
+      icon: BookOpen,
+      color: "from-blue-600 to-purple-600",
+      requiresSubjects: true,
+    },
+    {
+      id: "single-subject",
+      title: "Single Subject",
+      description: "Focus on one subject area",
+      icon: Target,
+      color: "from-green-600 to-emerald-600",
+      requiresSubjects: true,
+    },
+    {
+      id: "topic-mode",
+      title: "Topic Mode",
+      description: "Dive deep into specific topics",
+      icon: Brain,
+      color: "from-purple-600 to-pink-600",
+      requiresSubjects: true,
+    },
+    {
+      id: "general-knowledge",
+      title: "General Knowledge",
+      description: "Random questions from all areas",
+      icon: Sparkles,
+      color: "from-yellow-600 to-orange-600",
+      requiresSubjects: false,
+    },
+  ];
+
+  // ---------------------
+  // Handlers
+  // ---------------------
+  const toggleSubject = (subject: string) => {
+    setSubjects((prev) =>
+      prev.includes(subject)
+        ? prev.filter((s) => s !== subject)
+        : [...prev, subject]
+    );
+  };
+
+  const toggleTopic = (topic: string) => {
+    setTopics((prev) =>
+      prev.includes(topic) ? prev.filter((t) => t !== topic) : [...prev, topic]
+    );
+  };
+
+  const canStartGame = () => {
+    if (!gameMode) return false;
+    const mode = gameModes.find((m) => m.id === gameMode);
+    if (!mode?.requiresSubjects) return true;
+    if (gameMode === "topic-mode") return topics.length > 0;
+    return subjects.length > 0;
+  };
+
+  const handleStart = () => {
+    if (!canStartGame()) return;
+    setStage("matching");
+  };
+
+  const handleGameComplete = (coins: number, xp: number) => {
+    setUser((prev) => ({
+      ...prev,
+      coins: prev.coins + coins,
+      xp: prev.xp + xp,
+      totalMatches: prev.totalMatches + 1,
+      wins: prev.wins + 1,
+    }));
+    router.push("/dashboard");
+  };
+
+  // ---------------------
+  // UI Flow
+  // ---------------------
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-purple-900">
+      {stage === "modes" && (
+        <div className="p-4 md:p-6 max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8">
+            <button
+              onClick={() => router.push("/dashboard")}
+              className="flex items-center space-x-2 text-white hover:text-purple-300 transition-colors duration-200"
+            >
+              <ArrowLeft className="w-6 h-6" />
+              <span className="font-medium">Back to Dashboard</span>
+            </button>
+            <h1 className="text-3xl font-bold text-white">Choose Game Mode</h1>
+            <div />
+          </div>
+
+          {/* Game Modes */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            {gameModes.map((mode) => {
+              const Icon = mode.icon;
+              const isSelected = gameMode === mode.id;
+              return (
+                <button
+                  key={mode.id}
+                  onClick={() => {
+                    setGameMode(mode.id);
+                    setSubjects([]);
+                    setTopics([]);
+                  }}
+                  className={`p-6 rounded-xl transition-all duration-200 transform hover:scale-105 border-2 ${
+                    isSelected
+                      ? "border-purple-400 bg-purple-500/20"
+                      : "border-white/20 bg-white/10 hover:border-white/40"
+                  } backdrop-blur-md`}
+                >
+                  <div
+                    className={`w-16 h-16 bg-gradient-to-br ${mode.color} rounded-full flex items-center justify-center mx-auto mb-4`}
+                  >
+                    <Icon className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    {mode.title}
+                  </h3>
+                  <p className="text-gray-300 text-sm">{mode.description}</p>
+                  {isSelected && (
+                    <div className="mt-3">
+                      <ChevronRight className="w-5 h-5 text-purple-400 mx-auto animate-pulse" />
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Subject / Topic Selection */}
+          {gameMode &&
+            gameModes.find((m) => m.id === gameMode)?.requiresSubjects && (
+              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 mb-8">
+                <h2 className="text-xl font-bold text-white mb-4">
+                  {gameMode === "topic-mode" ? "Select Topics" : "Select Subjects"}
+                </h2>
+
+                {gameMode === "topic-mode" ? (
+                  <div className="space-y-4">
+                    {Object.entries(topicsMap).map(([subject, subjectTopics]) => (
+                      <div key={subject}>
+                        <h3 className="text-lg font-semibold text-white mb-2">
+                          {subject}
+                        </h3>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                          {subjectTopics.map((topic) => (
+                            <button
+                              key={topic}
+                              onClick={() => toggleTopic(topic)}
+                              className={`p-3 rounded-lg border-2 transition-all duration-200 text-sm ${
+                                topics.includes(topic)
+                                  ? "border-purple-400 bg-purple-500/20 text-white"
+                                  : "border-white/20 bg-white/5 text-gray-300 hover:border-white/40"
+                              }`}
+                            >
+                              {topic}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {subjectsList.map((subject) => (
+                      <button
+                        key={subject.name}
+                        onClick={() => toggleSubject(subject.name)}
+                        className={`p-4 rounded-xl border-2 transition-all duration-200 transform hover:scale-105 ${
+                          subjects.includes(subject.name)
+                            ? "border-purple-400 bg-purple-500/20"
+                            : "border-white/20 bg-white/10 hover:border-white/40"
+                        }`}
+                      >
+                        <div
+                          className={`w-12 h-12 bg-gradient-to-br ${subject.color} rounded-full flex items-center justify-center mx-auto mb-3`}
+                        >
+                          <span className="text-2xl">{subject.icon}</span>
+                        </div>
+                        <h3 className="text-white font-medium">
+                          {subject.name}
+                        </h3>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+          {/* Start Game */}
+          <div className="text-center">
+            <button
+              onClick={handleStart}
+              disabled={!canStartGame()}
+              className={`px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 transform ${
+                canStartGame()
+                  ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 hover:scale-105 shadow-lg hover:shadow-2xl"
+                  : "bg-gray-600 text-gray-400 cursor-not-allowed"
+              }`}
+            >
+              Start Game
+            </button>
+          </div>
+        </div>
+      )}
+
+      {stage === "matching" && (
+        <MatchSimulation
+          user={user}
+          gameMode={gameMode}
+          subjects={gameMode === "topic-mode" ? topics : subjects}
+          onBack={() => setStage("modes")}
+          onGameStart={() => setStage("questions")}
+        />
+      )}
+
+      {stage === "questions" && (
+        <QuestionScreen
+          gameMode={gameMode}
+          subjects={gameMode === "topic-mode" ? topics : subjects}
+          onBack={() => setStage("modes")}
+          onGameComplete={handleGameComplete}
+        />
+      )}
+    </div>
+  );
 }
