@@ -145,7 +145,8 @@ function page() {
           </button>
 
           <button
-            // onClick={() => onNavigate('rewards')}
+          
+            onClick={() => router.push("/rewards")}
             className="bg-gradient-to-br from-emerald-500 to-green-600 p-6 rounded-xl text-white hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 transform hover:scale-105 group shadow-lg hover:shadow-2xl"
           >
             <Gift className="w-8 h-8 mb-3 group-hover:scale-110 transition-transform duration-200" />

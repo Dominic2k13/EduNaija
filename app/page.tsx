@@ -317,7 +317,7 @@ export default function HomePage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Link href="/games">
+                <Link href="/dashboard">
                   <Button
                     variant="outline"
                     className="w-full border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-300 transform hover:scale-105 bg-transparent"

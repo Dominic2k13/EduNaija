@@ -39,7 +39,7 @@ const initialUser: User = {
   rank: "Gold",
   xp: 1200,
   coins: 500,
-   avatar: '🎮',
+  avatar: "🎮",
   totalMatches: 20,
   wins: 15,
   winRate: 75,
@@ -59,12 +59,12 @@ export default function PlayPage() {
   // Game Data
   // ---------------------
   const subjectsList = [
-    { name: "Mathematics", icon: "📊", color: "from-blue-600 to-purple-600" },
-    { name: "Physics", icon: "⚡", color: "from-yellow-600 to-orange-600" },
-    { name: "Chemistry", icon: "🧪", color: "from-green-600 to-teal-600" },
-    { name: "Biology", icon: "🧬", color: "from-emerald-600 to-green-600" },
-    { name: "English", icon: "📚", color: "from-pink-600 to-red-600" },
-    { name: "History", icon: "🏛️", color: "from-amber-600 to-yellow-600" },
+    { name: "Mathematics", icon: "📊", color: "from-yellow-400 to-orange-500" },
+    { name: "Physics", icon: "⚡", color: "from-orange-400 to-amber-500" },
+    { name: "Chemistry", icon: "🧪", color: "from-yellow-500 to-orange-600" },
+    { name: "Biology", icon: "🧬", color: "from-amber-400 to-yellow-500" },
+    { name: "English", icon: "📚", color: "from-orange-500 to-red-500" },
+    { name: "History", icon: "🏛️", color: "from-yellow-600 to-orange-600" },
   ];
 
   const topicsMap = {
@@ -82,7 +82,7 @@ export default function PlayPage() {
       title: "Subject Combination",
       description: "Mix multiple subjects for variety",
       icon: BookOpen,
-      color: "from-blue-600 to-purple-600",
+      color: "from-yellow-400 to-orange-500",
       requiresSubjects: true,
     },
     {
@@ -90,7 +90,7 @@ export default function PlayPage() {
       title: "Single Subject",
       description: "Focus on one subject area",
       icon: Target,
-      color: "from-green-600 to-emerald-600",
+      color: "from-orange-400 to-amber-500",
       requiresSubjects: true,
     },
     {
@@ -98,7 +98,7 @@ export default function PlayPage() {
       title: "Topic Mode",
       description: "Dive deep into specific topics",
       icon: Brain,
-      color: "from-purple-600 to-pink-600",
+      color: "from-amber-400 to-yellow-500",
       requiresSubjects: true,
     },
     {
@@ -106,7 +106,7 @@ export default function PlayPage() {
       title: "General Knowledge",
       description: "Random questions from all areas",
       icon: Sparkles,
-      color: "from-yellow-600 to-orange-600",
+      color: "from-orange-500 to-red-500",
       requiresSubjects: false,
     },
   ];
@@ -156,19 +156,21 @@ export default function PlayPage() {
   // UI Flow
   // ---------------------
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-purple-900">
+    <div className="min-h-screen bg-[#FFFBEA]">
       {stage === "modes" && (
         <div className="p-4 md:p-6 max-w-4xl mx-auto">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <button
               onClick={() => router.push("/dashboard")}
-              className="flex items-center space-x-2 text-white hover:text-purple-300 transition-colors duration-200"
+              className="flex items-center space-x-2 text-gray-800 hover:text-[#F59E0B] transition-colors duration-200"
             >
               <ArrowLeft className="w-6 h-6" />
               <span className="font-medium">Back to Dashboard</span>
             </button>
-            <h1 className="text-3xl font-bold text-white">Choose Game Mode</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Choose Game Mode
+            </h1>
             <div />
           </div>
 
@@ -187,22 +189,22 @@ export default function PlayPage() {
                   }}
                   className={`p-6 rounded-xl transition-all duration-200 transform hover:scale-105 border-2 ${
                     isSelected
-                      ? "border-purple-400 bg-purple-500/20"
-                      : "border-white/20 bg-white/10 hover:border-white/40"
-                  } backdrop-blur-md`}
+                      ? "border-[#F59E0B] bg-[#FEF3C7]"
+                      : "border-[#FCD34D] bg-white hover:bg-[#FFF7E6]"
+                  } shadow-md`}
                 >
                   <div
                     className={`w-16 h-16 bg-gradient-to-br ${mode.color} rounded-full flex items-center justify-center mx-auto mb-4`}
                   >
                     <Icon className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
                     {mode.title}
                   </h3>
-                  <p className="text-gray-300 text-sm">{mode.description}</p>
+                  <p className="text-gray-700 text-sm">{mode.description}</p>
                   {isSelected && (
                     <div className="mt-3">
-                      <ChevronRight className="w-5 h-5 text-purple-400 mx-auto animate-pulse" />
+                      <ChevronRight className="w-5 h-5 text-[#F59E0B] mx-auto animate-pulse" />
                     </div>
                   )}
                 </button>
@@ -213,16 +215,18 @@ export default function PlayPage() {
           {/* Subject / Topic Selection */}
           {gameMode &&
             gameModes.find((m) => m.id === gameMode)?.requiresSubjects && (
-              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 mb-8">
-                <h2 className="text-xl font-bold text-white mb-4">
-                  {gameMode === "topic-mode" ? "Select Topics" : "Select Subjects"}
+              <div className="bg-white rounded-2xl p-6 border border-[#FCD34D] shadow-md mb-8">
+                <h2 className="text-xl font-bold text-gray-900 mb-4">
+                  {gameMode === "topic-mode"
+                    ? "Select Topics"
+                    : "Select Subjects"}
                 </h2>
 
                 {gameMode === "topic-mode" ? (
                   <div className="space-y-4">
                     {Object.entries(topicsMap).map(([subject, subjectTopics]) => (
                       <div key={subject}>
-                        <h3 className="text-lg font-semibold text-white mb-2">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-2">
                           {subject}
                         </h3>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -232,8 +236,8 @@ export default function PlayPage() {
                               onClick={() => toggleTopic(topic)}
                               className={`p-3 rounded-lg border-2 transition-all duration-200 text-sm ${
                                 topics.includes(topic)
-                                  ? "border-purple-400 bg-purple-500/20 text-white"
-                                  : "border-white/20 bg-white/5 text-gray-300 hover:border-white/40"
+                                  ? "border-[#F59E0B] bg-[#FEF3C7] text-gray-900"
+                                  : "border-[#FCD34D] bg-white text-gray-700 hover:bg-[#FFF7E6]"
                               }`}
                             >
                               {topic}
@@ -251,8 +255,8 @@ export default function PlayPage() {
                         onClick={() => toggleSubject(subject.name)}
                         className={`p-4 rounded-xl border-2 transition-all duration-200 transform hover:scale-105 ${
                           subjects.includes(subject.name)
-                            ? "border-purple-400 bg-purple-500/20"
-                            : "border-white/20 bg-white/10 hover:border-white/40"
+                            ? "border-[#F59E0B] bg-[#FEF3C7]"
+                            : "border-[#FCD34D] bg-white hover:bg-[#FFF7E6]"
                         }`}
                       >
                         <div
@@ -260,7 +264,7 @@ export default function PlayPage() {
                         >
                           <span className="text-2xl">{subject.icon}</span>
                         </div>
-                        <h3 className="text-white font-medium">
+                        <h3 className="text-gray-900 font-medium">
                           {subject.name}
                         </h3>
                       </button>
@@ -277,8 +281,8 @@ export default function PlayPage() {
               disabled={!canStartGame()}
               className={`px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 transform ${
                 canStartGame()
-                  ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 hover:scale-105 shadow-lg hover:shadow-2xl"
-                  : "bg-gray-600 text-gray-400 cursor-not-allowed"
+                  ? "bg-[#F59E0B] text-white hover:bg-[#D97706] hover:scale-105 shadow-lg"
+                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
               }`}
             >
               Start Game

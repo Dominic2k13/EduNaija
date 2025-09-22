@@ -23,23 +23,94 @@ export default function Leaderboard({ gameFilter, showAllGames = true }: Leaderb
   const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([])
   const [selectedGame, setSelectedGame] = useState<string>("all")
 
-  useEffect(() => {
-    // Load leaderboard data from localStorage
-    const data = localStorage.getItem("gameLeaderboard") || "[]"
-    let entries: LeaderboardEntry[] = JSON.parse(data)
+  const defaultLeaderboardData: LeaderboardEntry[] = [
+  {
+    name: "You",
+    score: 250,
+    game: "Quiz Master",
+    date: new Date().toISOString(),
+  },
+  {
+    name: "Maureen vincent",
+    score: 390,
+    game: "Math Champion",
+    date: new Date().toISOString(),
+  },
+  {
+    name: "Uche Okafor",
+    score: 370,
+    game: "Science Explorer",
+    date: new Date().toISOString(),
+  },
+  {
+    name: "Adenike Ruth",
+    score: 350,
+    game: "Word Wizard",
+    date: new Date().toISOString(),
+  },
+  {
+    name: "Kayode Arigbede",
+    score: 330,
+    game: "Quiz Master",
+    date: new Date().toISOString(),
+  },
+  {
+    name: "Chinnazam Nnaemeka",
+    score: 310,
+    game: "Math Champion",
+    date: new Date().toISOString(),
+  },
+  {
+    name: "Daniella Emmanuel",
+    score: 290,
+    game: "Science Explorer",
+    date: new Date().toISOString(),
+  },
+  {
+    name: "Somtochukwu Eze",
+    score: 270,
+    game: "Word Wizard",
+    date: new Date().toISOString(),
+  },
+  {
+    name: "Emeka Akamelaku",
+    score: 250,
+    game: "Quiz Master",
+    date: new Date().toISOString(),
+  },
+  {
+    name: "Mary Charles",
+    score: 230,
+    game: "Math Champion",
+    date: new Date().toISOString(),
+  },
+]
 
-    // Filter by game if specified
-    if (gameFilter && gameFilter !== "all") {
-      entries = entries.filter((entry) => entry.game === gameFilter)
-    } else if (selectedGame !== "all") {
-      entries = entries.filter((entry) => entry.game === selectedGame)
-    }
+useEffect(() => {
+  const stored = localStorage.getItem("gameLeaderboard")
+  if (!stored || stored === "[]") {
+  localStorage.setItem("gameLeaderboard", JSON.stringify(defaultLeaderboardData))
+}
 
-    // Add rank to entries
-    entries = entries.map((entry, index) => ({ ...entry, rank: index + 1 }))
+  let entries: LeaderboardEntry[] = stored && stored !== "[]"
+    ? JSON.parse(stored)
+    : defaultLeaderboardData
 
-    setLeaderboardData(entries.slice(0, 10)) // Top 10
-  }, [gameFilter, selectedGame])
+  // Apply game filter
+  if (gameFilter && gameFilter !== "all") {
+    entries = entries.filter((entry) => entry.game === gameFilter)
+  } else if (selectedGame !== "all") {
+    entries = entries.filter((entry) => entry.game === selectedGame)
+  }
+
+  // Sort and rank entries
+  entries = entries
+    .sort((a, b) => b.score - a.score) // Highest scores first
+    .map((entry, index) => ({ ...entry, rank: index + 1 }))
+
+  setLeaderboardData(entries.slice(0, 10)) // Top 10
+}, [gameFilter, selectedGame])
+
 
   const getRankIcon = (rank: number) => {
     switch (rank) {
