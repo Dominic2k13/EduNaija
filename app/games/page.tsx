@@ -20,6 +20,7 @@ export interface User {
   id: string;
   username: string;
   email: string;
+  
   displayName: string;
   rank: string;
   xp: number;

@@ -160,19 +160,19 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
   const getOptionClass = (index: number) => {
     if (!showResult) {
       return selectedAnswer === index 
-        ? 'border-purple-400 bg-purple-500/20 text-white'
-        : 'border-white/20 bg-white/10 hover:border-white/40 text-gray-200';
+        ? 'border-purple-400 bg-purple-500/20 text-black'
+        : 'border-[#FCD34D] bg-white/10 hover:border-[#FCD34D]text-gray-800';
     }
     
     if (index === questions[currentQuestion].correctAnswer) {
-      return 'border-green-400 bg-green-500/20 text-green-100';
+      return 'border-green-400 bg-green-500/20 text-green-700';
     }
     
     if (selectedAnswer === index && index !== questions[currentQuestion].correctAnswer) {
       return 'border-red-400 bg-red-500/20 text-red-100';
     }
     
-    return 'border-gray-500/20 bg-gray-500/10 text-gray-400';
+    return 'border-gray-500/20 bg-gray-500/10 text-gray-700';
   };
 
   if (gameComplete) {
@@ -180,28 +180,28 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
       <div className="min-h-screen p-4 md:p-6 flex items-center justify-center">
         <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-center border border-white/20 max-w-md w-full">
           <div className="w-20 h-20 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Trophy className="w-10 h-10 text-white" />
+            <Trophy className="w-10 h-10 text-black" />
           </div>
-          <h2 className="text-3xl font-bold text-white mb-4">Game Complete!</h2>
+          <h2 className="text-3xl font-bold text-black mb-4">Game Complete!</h2>
           <div className="space-y-4 mb-6">
             <div className="flex justify-between items-center">
-              <span className="text-gray-300">Final Score:</span>
+              <span className="text-gray-800">Final Score:</span>
               <span className="text-2xl font-bold text-yellow-400">{score}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-300">Best Streak:</span>
+              <span className="text-gray-800">Best Streak:</span>
               <span className="text-lg font-bold text-green-400">{streak}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-300">Coins Earned:</span>
+              <span className="text-gray-800">Coins Earned:</span>
               <span className="text-lg font-bold text-yellow-400">{Math.floor(score / 10)}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-300">XP Earned:</span>
+              <span className="text-gray-800">XP Earned:</span>
               <span className="text-lg font-bold text-purple-400">{score + (streak * 5)}</span>
             </div>
           </div>
-          <div className="animate-pulse text-gray-300">
+          <div className="animate-pulse text-gray-800">
             Returning to dashboard...
           </div>
         </div>
@@ -216,15 +216,15 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={onBack}
-            className="flex items-center space-x-2 text-white hover:text-purple-300 transition-colors duration-200"
+            className="flex items-center space-x-2 text-black hover:text-purple-300 transition-colors duration-200"
           >
             <ArrowLeft className="w-6 h-6" />
             <span className="font-medium">Quit</span>
           </button>
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <Clock className="w-5 h-5 text-white" />
-              <span className={`font-bold text-lg ${timeLeft <= 10 ? 'text-red-400 animate-pulse' : 'text-white'}`}>
+              <Clock className="w-5 h-5 text-black" />
+              <span className={`font-bold text-lg ${timeLeft <= 10 ? 'text-red-400 animate-pulse' : 'text-black'}`}>
                 {timeLeft}s
               </span>
             </div>
@@ -240,10 +240,10 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
         </div>
 
         {/* Progress Bars */}
-        <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 mb-6 border border-white/20">
+        <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 mb-6 border border-[#FCD34D]">
           <div className="flex justify-between items-center mb-4">
-            <span className="text-white font-medium">You</span>
-            <span className="text-white font-medium">Opponents</span>
+            <span className="text-black font-medium">You</span>
+            <span className="text-black font-medium">Opponents</span>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -266,20 +266,20 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
         </div>
 
         {/* Question */}
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-[#FCD34D]">
           <div className="flex justify-between items-center mb-6">
-            <span className="text-sm text-purple-300 font-medium">
+            <span className="text-sm text-purple-800 font-medium">
               Question {currentQuestion + 1} of {questions.length}
             </span>
             <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-300">{questions[currentQuestion].subject}</span>
-              <span className="px-2 py-1 bg-purple-500/30 text-purple-200 rounded text-xs">
+              <span className="text-sm text-gray-700">{questions[currentQuestion].subject}</span>
+              <span className="px-2 py-1 bg-purple-500/30 text-purple-800 rounded text-xs">
                 {questions[currentQuestion].difficulty}
               </span>
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-white mb-8 leading-relaxed">
+          <h2 className="text-2xl font-bold text-black mb-8 leading-relaxed">
             {questions[currentQuestion].question}
           </h2>
 
@@ -294,10 +294,10 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
                 <div className="flex items-center space-x-3">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
                     showResult && index === questions[currentQuestion].correctAnswer 
-                      ? 'bg-green-500 text-white'
+                      ? 'bg-green-500 text-black'
                       : showResult && selectedAnswer === index && index !== questions[currentQuestion].correctAnswer
-                      ? 'bg-red-500 text-white'
-                      : 'bg-white/20 text-white'
+                      ? 'bg-red-500 text-black'
+                      : 'bg-white/20 text-black'
                   }`}>
                     {String.fromCharCode(65 + index)}
                   </div>
@@ -310,7 +310,7 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
           {showResult && (
             <div className="mt-6 text-center">
               {selectedAnswer === questions[currentQuestion].correctAnswer ? (
-                <div className="text-green-400">
+                <div className="text-green-800">
                   <p className="text-xl font-bold mb-2">Correct! 🎉</p>
                   <p className="text-sm">+{questions[currentQuestion].points + (streak * 10)} points</p>
                   {streak > 0 && <p className="text-xs text-yellow-400">Streak bonus: +{streak * 10}</p>}

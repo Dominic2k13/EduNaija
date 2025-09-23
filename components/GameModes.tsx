@@ -129,7 +129,7 @@ const GameModes: React.FC<GameModesProps> = ({ onBack, onStartGame }) => {
                 className={`p-6 rounded-xl transition-all duration-200 transform hover:scale-105 border-2 ${
                   isSelected
                     ? 'border-purple-400 bg-purple-500/20'
-                    : 'border-white/20 bg-white/10 hover:border-white/40'
+                    : 'border-white/10 bg-white/10 hover:'
                 } backdrop-blur-md`}
               >
                 <div className={`w-16 h-16 bg-gradient-to-br ${mode.color} rounded-full flex items-center justify-center mx-auto mb-4`}>
@@ -149,7 +149,7 @@ const GameModes: React.FC<GameModesProps> = ({ onBack, onStartGame }) => {
 
         {/* Subject/Topic Selection */}
         {selectedMode && gameModes.find(m => m.id === selectedMode)?.requiresSubjects && (
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 mb-8">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border  mb-8">
             <h2 className="text-xl font-bold text-white mb-4">
               {selectedMode === 'topic-mode' ? 'Select Topics' : 'Select Subjects'}
             </h2>
@@ -167,7 +167,7 @@ const GameModes: React.FC<GameModesProps> = ({ onBack, onStartGame }) => {
                           className={`p-3 rounded-lg border-2 transition-all duration-200 text-sm ${
                             selectedTopics.includes(topic)
                               ? 'border-purple-400 bg-purple-500/20 text-white'
-                              : 'border-white/20 bg-white/5 text-gray-300 hover:border-white/40'
+                              : ' bg-white/5 text-gray-300 hover:border-white/40'
                           }`}
                         >
                           {topic}
@@ -186,7 +186,7 @@ const GameModes: React.FC<GameModesProps> = ({ onBack, onStartGame }) => {
                     className={`p-4 rounded-xl border-2 transition-all duration-200 transform hover:scale-105 ${
                       selectedSubjects.includes(subject.name)
                         ? 'border-purple-400 bg-purple-500/20'
-                        : 'border-white/20 bg-white/10 hover:border-white/40'
+                        : ' bg-white/10 hover:border-white/40'
                     }`}
                   >
                     <div className={`w-12 h-12 bg-gradient-to-br ${subject.color} rounded-full flex items-center justify-center mx-auto mb-3`}>
