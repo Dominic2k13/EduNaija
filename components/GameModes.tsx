@@ -149,7 +149,7 @@ const GameModes: React.FC<GameModesProps> = ({ onBack, onStartGame }) => {
 
         {/* Subject/Topic Selection */}
         {selectedMode && gameModes.find(m => m.id === selectedMode)?.requiresSubjects && (
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border  mb-8">
+          <div className="bg-[#FFFBEA]backdrop-blur-md rounded-2xl p-6 border  mb-8">
             <h2 className="text-xl font-bold text-white mb-4">
               {selectedMode === 'topic-mode' ? 'Select Topics' : 'Select Subjects'}
             </h2>

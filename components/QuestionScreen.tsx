@@ -178,7 +178,7 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
   if (gameComplete) {
     return (
       <div className="min-h-screen p-4 md:p-6 flex items-center justify-center">
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-center border border-white/20 max-w-md w-full">
+        <div className="bg-[#FFFBEA]backdrop-blur-md rounded-2xl p-8 text-center border border-white/20 max-w-md w-full">
           <div className="w-20 h-20 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-6">
             <Trophy className="w-10 h-10 text-black" />
           </div>
@@ -240,7 +240,7 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
         </div>
 
         {/* Progress Bars */}
-        <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 mb-6 border border-[#FCD34D]">
+        <div className="bg-[#FFFBEA] backdrop-blur-md rounded-xl p-4 mb-6 border border-[#FCD34D]">
           <div className="flex justify-between items-center mb-4">
             <span className="text-black font-medium">You</span>
             <span className="text-black font-medium">Opponents</span>
@@ -266,7 +266,7 @@ const QuestionScreen: React.FC<QuestionScreenProps> = ({
         </div>
 
         {/* Question */}
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-[#FCD34D]">
+        <div className="bg-[#FFFBEA] backdrop-blur-md rounded-2xl p-8 border border-[#FCD34D]">
           <div className="flex justify-between items-center mb-6">
             <span className="text-sm text-purple-800 font-medium">
               Question {currentQuestion + 1} of {questions.length}

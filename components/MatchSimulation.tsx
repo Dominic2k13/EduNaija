@@ -82,7 +82,7 @@ const MatchSimulation: React.FC<MatchSimulationProps> = ({
         </div>
 
         {/* Game Info */}
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-8 border border-white/20">
+        <div className="bg-[#FFFBEA] backdrop-blur-md rounded-2xl p-6 mb-8 border border-white/20">
           <div className="text-center mb-6">
             <h2 className="text-xl font-bold text-black mb-2">Game Mode: {gameMode.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</h2>
             <div className="flex justify-center flex-wrap gap-2">
@@ -123,7 +123,7 @@ const MatchSimulation: React.FC<MatchSimulationProps> = ({
 
         {/* Matchmaking Progress */}
         {!foundMatch ? (
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 text-center">
+          <div className="bg-[#FFFBEA] backdrop-blur-md rounded-2xl p-8 border border-white/20 text-center">
             <div className="animate-spin w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-6"></div>
             <h2 className="text-2xl font-bold text-black mb-4">Searching for opponents...</h2>
             <div className="w-full bg-gray-700 rounded-full h-3 mb-4">
@@ -135,7 +135,7 @@ const MatchSimulation: React.FC<MatchSimulationProps> = ({
             <p className="text-gray-300">Finding players with similar skill level...</p>
           </div>
         ) : (
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+          <div className="bg-[#FFFBEA] backdrop-blur-md rounded-2xl p-8 border border-white/20">
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Trophy className="w-8 h-8 text-black" />
@@ -149,7 +149,7 @@ const MatchSimulation: React.FC<MatchSimulationProps> = ({
               {opponents.map((opponent, index) => (
                 <div
                   key={index}
-                  className="bg-white/10 rounded-xl p-4 border border-white/20 transform hover:scale-105 transition-all duration-200"
+                  className="bg-[#FFFBEA] rounded-xl p-4 border border-white/20 transform hover:scale-105 transition-all duration-200"
                 >
                   <div className="text-center">
                     <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center text-2xl mx-auto mb-3">
